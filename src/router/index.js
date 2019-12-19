@@ -23,32 +23,35 @@ import Layout from '../views/layout/Layout'
 
 //所有权限通用路由表
 //如首页和登录页和一些不用权限的公用页面
-export const constantRouterMap = [
-  { path: '/login', component: () => import('@/views/login/index'), hidden: true },
-  { path: '/error/401', component: () => import('@/views/error/401'), hidden: true },
-  { path: '/error/404', component: () => import('@/views/error/404'), hidden: true },
+export const constantRouterMap = [{
+    path: '/login',
+    component: () => import('@/views/login'),
+    hidden: true
+  },
+  {
+    path: '/error/401',
+    component: () => import('@/views/error/401'),
+    hidden: true
+  },
+  {
+    path: '/error/404',
+    component: () => import('@/views/error/404'),
+    hidden: true
+  },
 
   {
     path: '/',
     component: Layout,
     redirect: '/dashboard',
     name: 'Dashboard',
-    hidden: true,
+    // hidden: true,
     children: [{
       path: 'dashboard',
-      component: () => import('@/views/dashboard/index')
+      component: () => import('@/views/dashboard')
     }]
   },
-  {
-    path: '',
-    component: Layout,
-    name: 'Info',
-    hidden: true,
-    children: [{
-      path: '/info',
-      component: () => import('@/views/info/index')
-    }]
-  },
+
+
 ]
 
 
@@ -62,81 +65,274 @@ export default new Router({
 //异步挂载的路由
 //动态需要根据权限加载的路由表
 //meta无permissions字段则不做权限控制
-export const asyncRouterMap = [
-  {
-    path: '',
+export const asyncRouterMap = [{
+    path: '/user',
     component: Layout,
     alwaysShow: true,
-    name: 'System',
-    meta: { title: '系统管理', permissions: ['admin','role'], icon: 'system' },
-    children: [
-      {
-        path: '/admin/list',
-        name: 'Admin',
-        component: () => import('@/views/admin/index'),
-        meta: { title: '管理员列表', permissions: ['admin'] }
-      },
-      {
-        path: '/roles',
-        name: 'Role',
-        component: () => import('@/views/role/index'),
-        meta: { title: '角色列表', permissions: ['role'] }
-      }
-    ]
-  },
-
-  {
-    path: '',
-    component: Layout,
-    alwaysShow: true,
+    redirect: '/user/userList',
     name: 'User',
-    meta: { title: '用户管理', permissions: ['user'], icon: 'users' },
-    children: [
-      {
-        path: '/user/list',
-        name: 'Users',
-        component: () => import('@/views/user/index'),
-        meta: { title: '用户列表', permissions: ['user'] }
-      }
-    ]
-  },
+    meta: {
+      title: '用户管理',
+      icon: 'yonghuguanli'
+    },
+    children: [{
+        path: 'userList',
+        name: 'UserList',
+        component: () => import('@/views/user/userList'),
+        meta: {
+          title: '用户列表',
+          // icon: 'yonghuguanli'
+        }
+      },
 
-  {
-    path: '',
+    ]
+  }, {
+    path: '/course',
     component: Layout,
-    alwaysShow: true,
-    name: 'Content',
-    meta: { title: '内容管理', permissions: ['banner','about'], icon: 'content' },
-    children: [
-      {
-        path: '/banner/list',
-        name: 'Banners',
-        component: () => import('@/views/banner/index'),
-        meta: { title: '轮播图设置', permissions: ['banner'] }
+    // redirect: '/course/otherLocation',
+    name: 'Course',
+    meta: {
+      title: '课程管理',
+      icon: 'kechengguanli'
+    },
+    children: [{
+        path: 'otherLocation',
+        name: 'OtherLocation',
+        component: () => import('@/views/course/otherLocation'),
+        meta: {
+          title: '学校分点',
+          // icon: 'table'
+        }
       },
       {
-        path: '/about',
-        name: 'About',
-        component: () => import('@/views/about/index'),
-        meta: { title: '关于我们', permissions: ['about'] }
-      }
-    ]
-  },
-
-  {
-    path: '',
-    component: Layout,
-    alwaysShow: true,
-    name: 'Others',
-    meta: { title: '其他', icon: 'others' },
-    children: [
+        path: 'subjectList',
+        name: 'SubjectList',
+        component: () => import('@/views/course/subjectList'),
+        meta: {
+          title: '科目列表',
+          // icon: 'table'
+        }
+      },
       {
-        path: '/map',
-        name: 'Map',
-        component: () => import('@/views/others/map'),
-        meta: { title: '地图' }
-      }
+        path: 'courseList',
+        name: 'CourseList',
+        // redirect: '/course/courseList/courseModified',
+        component: () => import('@/views/course'),
+        meta: {
+          title: '课程列表',
+          // icon: 'table'
+        },
+        children: [{
+            path: 'courseModified',
+            name: 'CourseModified',
+            component: () => import('@/views/course/courseList/courseModified'),
+            meta: {
+              title: '新增、修改课程',
+              // icon: 'table'
+            },
+          },
+          {
+            path: 'signUpDetail',
+            name: 'SignUpDetail',
+            component: () => import('@/views/course/courseList/signUpDetail'),
+            meta: {
+              title: '报名详情',
+              // icon: 'table'
+            },
+          },
+          {
+            path: 'courseTime',
+            name: 'CourseTime',
+            component: () => import('@/views/course/courseList/courseTime'),
+            meta: {
+              title: '上课时间设置',
+              // icon: 'table'
+            },
+
+          },
+        ]
+      },
+
+    ]
+  }, {
+    path: '/website',
+    component: Layout,
+    // redirect: '/website/commonMes',
+    name: 'Website',
+    meta: {
+      title: '建站管理',
+      icon: 'jianzhan'
+    },
+    children: [{
+        path: 'commonMes',
+        name: 'CommonMes',
+        component: () => import('@/views/website/commonMes'),
+        meta: {
+          title: '公共信息',
+          // icon: 'table'
+        }
+      },
+      {
+        path: 'banner',
+        name: 'Banner',
+        alwaysShow: true,
+        component: () => import('@/views/website'),
+        meta: {
+          title: '轮播图管理',
+          // icon: 'table'
+        },
+        // redirect: '/website/banner/websiteModified',
+        children: [{
+          path: 'websiteModified',
+          name: 'WebsiteModified',
+          component: () => import('@/views/website/banner/websiteModified'),
+          meta: {
+            title: '新增、修改',
+            // icon: 'table'
+          }
+        }]
+      },
+
+    ]
+  }, {
+    path: '/finance',
+    component: Layout,
+    // redirect: '/finance/table',
+    name: 'Finance',
+    meta: {
+      title: '财务管理',
+      icon: 'caiwu'
+    },
+    children: [{
+        path: 'saleStatistic',
+        name: 'SaleStatistic',
+        component: () => import('@/views/finance/saleStatistic'),
+        meta: {
+          title: '流水统计',
+          // icon: 'table'
+        }
+      },
+      {
+        path: 'financeStatement',
+        name: 'FinanceStatement',
+        component: () => import('@/views/finance/financeStatement'),
+        meta: {
+          title: '财务结算',
+          // icon: 'table'
+        }
+      },
+
     ]
   },
-  { path: '*', redirect: '/error/404', hidden: true },
+  {
+    path: '*',
+    redirect: '/error/404',
+    hidden: true
+  },
 ]
+//     path: '',
+//     component: Layout,
+//     alwaysShow: true,
+//     name: 'System',
+//     meta: {
+//       title: '系统管理',
+//       permissions: ['admin', 'role'],
+//       icon: 'system'
+//     },
+//     children: [{
+//         path: '/admin/list',
+//         name: 'Admin',
+//         component: () => import('@/views/admin/index'),
+//         meta: {
+//           title: '管理员列表',
+//           permissions: ['admin']
+//         }
+//       },
+//       {
+//         path: '/roles',
+//         name: 'Role',
+//         component: () => import('@/views/role/index'),
+//         meta: {
+//           title: '角色列表',
+//           permissions: ['role']
+//         }
+//       }
+//     ]
+//   },
+
+//   {
+//     path: '',
+//     component: Layout,
+//     alwaysShow: true,
+//     name: 'User',
+//     meta: {
+//       title: '用户管理',
+//       permissions: ['user'],
+//       icon: 'users'
+//     },
+//     children: [{
+//       path: '/user/list',
+//       name: 'Users',
+//       component: () => import('@/views/user/index'),
+//       meta: {
+//         title: '用户列表',
+//         permissions: ['user']
+//       }
+//     }]
+//   },
+
+//   {
+//     path: '',
+//     component: Layout,
+//     alwaysShow: true,
+//     name: 'Content',
+//     meta: {
+//       title: '内容管理',
+//       permissions: ['banner', 'about'],
+//       icon: 'content'
+//     },
+//     children: [{
+//         path: '/banner/list',
+//         name: 'Banners',
+//         component: () => import('@/views/banner/index'),
+//         meta: {
+//           title: '轮播图设置',
+//           permissions: ['banner']
+//         }
+//       },
+//       {
+//         path: '/about',
+//         name: 'About',
+//         component: () => import('@/views/about/index'),
+//         meta: {
+//           title: '关于我们',
+//           permissions: ['about']
+//         }
+//       }
+//     ]
+//   },
+
+//   {
+//     path: '',
+//     component: Layout,
+//     alwaysShow: true,
+//     name: 'Others',
+//     meta: {
+//       title: '其他',
+//       icon: 'others'
+//     },
+//     children: [{
+//       path: '/map',
+//       name: 'Map',
+//       component: () => import('@/views/others/map'),
+//       meta: {
+//         title: '地图'
+//       }
+//     }]
+//   },
+//   {
+//     path: '*',
+//     redirect: '/error/404',
+//     hidden: true
+//   },
+// ]

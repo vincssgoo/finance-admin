@@ -11,7 +11,7 @@ import emptyDashboard from './empty'
 export default {
   name: 'Dashboard',
   components: { emptyDashboard },
-  data() {
+  data () {
     return {
       currentRole: 'emptyDashboard'
     }
@@ -19,7 +19,7 @@ export default {
   computed: {
 
   },
-  created() {
+  created () {
   }
 }
 </script>
