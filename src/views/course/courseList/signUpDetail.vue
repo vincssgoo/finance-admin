@@ -4,28 +4,30 @@
          style="margin-bottom:15px;">
       <span class="demonstration"
             style="font-size:15px;">报名时间 </span>
-      <el-date-picker v-model="value2"
-                      type="daterange"
-                      align="right"
-                      unlink-panels
-                      style="margin:0 15px;"
-                      range-separator="至"
-                      start-placeholder="开始日期"
-                      end-placeholder="结束日期"
-                      :picker-options="pickerOptions">
+      <el-date-picker style="margin-left:20px;"
+                      v-model="listQuery.start_datetime"
+                      type="date"
+                      placeholder="开始日期时间"
+                      value-format="yyyy-MM-dd"></el-date-picker>
+      至
+      <el-date-picker v-model="listQuery.end_datetime"
+                      type="date"
+                      placeholder="结束日期时间"
+                      value-format="yyyy-MM-dd">
       </el-date-picker>
       <el-input placeholder="请输入用户名/电话"
-                v-model="input"
+                v-model="listQuery.keyword"
                 style="width: 320px;"
                 clearable>
       </el-input>
       <el-button type="primary"
                  plain
                  style="float:right;"
-                 icon="el-icon-search">搜索</el-button>
+                 icon="el-icon-search"
+                 @click="handleFilter">搜索</el-button>
     </div>
     <div style="margin-bottom:15px;">
-      <span style="font-size:15px;">报名户数量:654321</span>
+      <span style="font-size:15px;">报名户数量:{{total}}</span>
     </div>
     <el-table v-loading="listLoading"
               :data="list"
@@ -37,27 +39,27 @@
                        label="序号"
                        width="95">
         <template slot-scope="scope">
-          {{ scope.$index+1 }}
+          {{ scope.row.user.id }}
         </template>
       </el-table-column>
       <el-table-column align="center"
                        label="头像">
         <template slot-scope="scope">
-          {{ scope.row.avatar }}
+          {{ scope.row.user.avatar }}
         </template>
       </el-table-column>
       <el-table-column label="昵称"
                        width="110"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.nickname }}</span>
+          <span>{{ scope.row.user.nickname }}</span>
         </template>
       </el-table-column>
       <el-table-column label="联系电话"
                        width="110"
                        align="center">
         <template slot-scope="scope">
-          {{ scope.row.tel }}
+          {{ scope.row.user.phone }}
         </template>
       </el-table-column>
       <el-table-column class-name="status-col"
@@ -65,14 +67,14 @@
                        width="110"
                        align="center">
         <template slot-scope="scope">
-          <span>{{scope.row.name}}</span>
+          <span>{{scope.row.user.name}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center"
                        label="报名时间"
                        width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.signup_time }}</span>
+          <span>{{ scope.row.pay_datetime }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center"
@@ -88,76 +90,69 @@
       <!-- <span class="demonstration">完整功能</span> -->
       <el-pagination @size-change="handleSizeChange"
                      @current-change="handleCurrentChange"
-                     :current-page="currentPage4"
+                     :current-page="listQuery.page"
                      :page-sizes="[5, 10, 20, 50,100]"
-                     :page-size="100"
+                     :page-size="listQuery.limit"
                      layout="total, sizes, prev, pager, next, jumper"
-                     :total="400">
+                     :total="total">
       </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
-
+import request from "@/utils/request";
 export default {
-  filters: {
-    statusFilter (status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
+
   data () {
     return {
-      input: '',
+      total: null,
       list: null,
-      listLoading: true
+      listLoading: true,
+      btnLoading: false,
+      listQuery: {
+        page: 1,
+        limit: 10,
+        id: "",
+        start_datetime: '',
+        end_datetime: '',
+        keyword: '',
+      },
     }
   },
   created () {
-    this.fetchData()
+
+    this.getList();
   },
   methods: {
+    handleFilter () {
+      this.listQuery.page = 1;
+      this.getList();
+    },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`);
+      this.listQuery.limit = val;
+      this.getList();
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`);
+      this.listQuery.page = val;
+      this.getList();
     },
-    fetchData () {
-      this.listLoading = true
-      // getList().then(response => {
-      //   this.list = response.data.items
-      //   this.listLoading = false
-      // })
-      this.list = [
-        {
-          avatar: 'null',
-          nickname: '小红',
-          tel: '13112345678',
-          name: '红红',
-          // register_time: '2019.12.12',
-          signup_time: '2019.12.12',
-          price: 55
-        },
-        {
-          avatar: 'null',
-          nickname: '小红',
-          tel: '13112345678',
-          name: '红红',
-          // register_time: '2019.12.12',
-          signup_time: '2019.12.12',
-          price: 55
-        },
+    getList () {
+      console.log(123);
+      this.listQuery.id = this.$route.query.id;
+      this.listLoading = true;
+      request({
+        url: "/api/backend/course/enrollDetail",
+        method: "get",
+        params: this.listQuery
+      }).then(response => {
+        this.list = response.data.data;
+        this.total = response.data.total;
+        this.listLoading = false;
+        console.log(this.list);
 
-      ]
-      this.listLoading = false
-    }
+      });
+    },
   }
 }
 </script>

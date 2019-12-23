@@ -2,17 +2,7 @@
   <div class="app-container">
     <div style="margin-bottom:15px;">
       <el-button type="primary"
-                 @click="dialogVisible = true">新增</el-button>
-      <el-button type="primary"
-                 plain
-                 style="float:right;"
-                 icon="el-icon-search"
-                 @click="handleFilter">搜索</el-button>
-      <el-input placeholder="请输入名称"
-                v-model="listQuery.name"
-                style="width: 320px;float:right;"
-                clearable>
-      </el-input>
+                 @click="goModified">添加</el-button>
 
     </div>
     <el-table v-loading="listLoading"
@@ -28,10 +18,22 @@
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="科目"
+      <el-table-column label="问题"
                        align="center">
         <template slot-scope="scope">
-          {{ scope.row.name }}
+          {{ scope.row.title }}
+        </template>
+      </el-table-column>
+      <el-table-column label="答案"
+                       align="center">
+        <template slot-scope="scope">
+          {{ scope.row.content }}
+        </template>
+      </el-table-column>
+      <el-table-column label="权重"
+                       align="center">
+        <template slot-scope="scope">
+          {{ scope.row.weight }}
         </template>
       </el-table-column>
       <el-table-column label="操作"
@@ -48,27 +50,6 @@
 
     </el-table>
 
-    <el-dialog :close-on-click-modal="false"
-               :visible.sync="dialogVisible"
-               width="50%">
-      <el-form ref="form"
-               :model="form"
-               label-position="left"
-               label-width="70px">
-        <el-form-item label="科目"
-                      prop="name">
-          <el-input v-model="form.name"
-                    placeholder="请输入科目名称" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer"
-           class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary"
-                   @click="saveData"
-                   :loading="btnLoading">确定</el-button>
-      </div>
-    </el-dialog>
     <div class="block"
          style="margin-top:25px">
       <!-- <span class="demonstration">完整功能</span> -->
@@ -88,18 +69,15 @@
 import request from "@/utils/request";
 
 export default {
-
   data () {
     return {
       total: null,
       list: null,
       listLoading: true,
       btnLoading: false,
-      dialogVisible: false,
       listQuery: {
         page: 1,
         limit: 10,
-        name: ""
       },
       form: {
         id: "",
@@ -110,33 +88,23 @@ export default {
   created () {
     this.getList();
   },
-  watch: {
-    dialogVisible (newVal, oldVal) {
-      // 编辑框一异隐藏，马上清除旧数据
-      if (newVal === false) {
-        this.form = {
-          id: '',
-          name: '',
-        };
-      }
-    }
-  },
   methods: {
     getList () {
-      console.log(123);
 
       this.listLoading = true;
       request({
-        url: "/api/backend/courseType/index",
+        url: "/api/backend/question/index",
         method: "get",
-        params: this.listQuery
       }).then(response => {
         this.list = response.data.data;
         this.total = response.data.total;
         this.listLoading = false;
-        console.log(this.list);
 
       });
+    },
+    goModified () {
+      this.$router.replace({ path: '/questionModified' })
+
     },
     handleSizeChange (val) {
       this.listQuery.limit = val;
@@ -147,22 +115,18 @@ export default {
       this.getList();
     },
     handleEdit (item) {
-      this.form = {
-        id: item.id,
-        name: item.name,
-      };
-
-      this.dialogVisible = true;
+      this.$router.replace({        path: '/questionModified',
+        query: { id: item.id }      })
     },
     handleDelete (row) {
-      this.$confirm("确定要删除分点吗？", "提示", {
+      this.$confirm("确定要删除问题吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
         console.log(1234);
         request({
-          url: "/api/backend/courseType/delete",
+          url: "/api/backend/question/delete",
           method: "post",
           data: { id: row.id },
         }).then(() => {
@@ -178,39 +142,38 @@ export default {
         });
       });
     },
-    handleFilter () {
-      this.listQuery.page = 1;
-      this.getList();
-    },
-    saveData () {
-      if (!this.form.name) {
-        this.$message({
-          type: "warning",
-          message: "请输入学校分点名称"
-        });
-        return;
-      }
 
-      this.btnLoading = true;
-      request({
-        url: "/api/backend/courseType/store",
-        method: "post",
-        data: this.form
-      })
-        .then(() => {
-          this.btnLoading = false;
-          this.dialogVisible = false;
-          this.getList();
-          this.$message({
-            type: "success",
-            message: "操作成功!"
-          });
-        })
-        .finally(() => {
-          this.btnLoading = false;
-        });
-    },
+    // saveData () {
+    //   if (!this.form.name) {
+    //     this.$message({
+    //       type: "warning",
+    //       message: "请输入学校分点名称"
+    //     });
+    //     return;
+    //   }
 
-  }
+    //   this.btnLoading = true;
+    //   request({
+    //     url: "/api/backend/courseSite/store",
+    //     method: "post",
+    //     data: this.form
+    //   })
+    //     .then(() => {
+    //       this.btnLoading = false;
+    //       this.dialogVisible = false;
+    //       this.getList();
+    //       this.$message({
+    //         type: "success",
+    //         message: "操作成功!"
+    //       });
+    //     })
+    //     .finally(() => {
+    //       this.btnLoading = false;
+    //     });
+    // },
+  },
+
+
 }
+
 </script>

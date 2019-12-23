@@ -3,8 +3,19 @@
     <el-form ref="form"
              :model="form"
              label-width="120px">
-      <el-form-item label="图片">
-        <upload-one v-model="form.image"></upload-one>
+      <el-form-item label="问题">
+        <el-input type="textarea"
+                  :rows="5"
+                  placeholder="请输入问题"
+                  v-model="form.title">
+        </el-input>
+      </el-form-item>
+      <el-form-item label="答案">
+        <el-input type="textarea"
+                  :rows="5"
+                  placeholder="请输入答案"
+                  v-model="form.content">
+        </el-input>
       </el-form-item>
       <el-form-item label="权重">
         <el-input type="number"
@@ -32,7 +43,8 @@ export default {
     return {
       form: {
         id: '',
-        image: '',
+        title: '',
+        content: '',
         weight: '',
       },
       btnLoading: false,
@@ -49,7 +61,7 @@ export default {
       console.log(this.$route.query.id);
       this.listLoading = true;
       request({
-        url: "/api/backend/banner/index",
+        url: "/api/backend/question/index",
         method: "get",
       }).then(response => {
         for (let i = 0; i < response.data.data.length; i++) {
@@ -63,13 +75,13 @@ export default {
       })
     },
     backIndex () {
-      this.$router.replace({ path: '/website/index' })
+      this.$router.replace({ path: '/website/question' })
     },
     saveData () {
       if (this.$route.query.id) { this.form.id = this.$route.query.id; }
       this.btnLoading = true;
       request({
-        url: "/api/backend/banner/store",
+        url: "/api/backend/question/store",
         method: "post",
         data: this.form
       })

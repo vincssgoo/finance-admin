@@ -2,18 +2,7 @@
   <div class="app-container">
     <div style="margin-bottom:15px;">
       <el-button type="primary"
-                 @click="dialogVisible = true">新增</el-button>
-      <el-button type="primary"
-                 plain
-                 style="float:right;"
-                 icon="el-icon-search"
-                 @click="handleFilter">搜索</el-button>
-      <el-input placeholder="请输入名称"
-                v-model="listQuery.name"
-                style="width: 320px;float:right;"
-                clearable>
-      </el-input>
-
+                 @click="goModified">添加</el-button>
     </div>
     <el-table v-loading="listLoading"
               :data="list"
@@ -28,10 +17,17 @@
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="科目"
+      <el-table-column label="图片"
                        align="center">
         <template slot-scope="scope">
-          {{ scope.row.name }}
+          <img :src="scope.row.image"
+               class="user-avatar">
+        </template>
+      </el-table-column>
+      <el-table-column label="权重"
+                       align="center">
+        <template slot-scope="scope">
+          {{ scope.row.weight }}
         </template>
       </el-table-column>
       <el-table-column label="操作"
@@ -48,27 +44,6 @@
 
     </el-table>
 
-    <el-dialog :close-on-click-modal="false"
-               :visible.sync="dialogVisible"
-               width="50%">
-      <el-form ref="form"
-               :model="form"
-               label-position="left"
-               label-width="70px">
-        <el-form-item label="科目"
-                      prop="name">
-          <el-input v-model="form.name"
-                    placeholder="请输入科目名称" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer"
-           class="dialog-footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary"
-                   @click="saveData"
-                   :loading="btnLoading">确定</el-button>
-      </div>
-    </el-dialog>
     <div class="block"
          style="margin-top:25px">
       <!-- <span class="demonstration">完整功能</span> -->
@@ -86,7 +61,6 @@
 
 <script>
 import request from "@/utils/request";
-
 export default {
 
   data () {
@@ -99,70 +73,54 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        name: ""
       },
-      form: {
-        id: "",
-        name: "",
-      },
+      // form: {
+      //   id: '',
+      //   image: '',
+      //   weight: '',
+      // }
     }
   },
   created () {
-    this.getList();
-  },
-  watch: {
-    dialogVisible (newVal, oldVal) {
-      // 编辑框一异隐藏，马上清除旧数据
-      if (newVal === false) {
-        this.form = {
-          id: '',
-          name: '',
-        };
-      }
-    }
+    this.getList()
   },
   methods: {
     getList () {
-      console.log(123);
+      console.log('test');
 
       this.listLoading = true;
       request({
-        url: "/api/backend/courseType/index",
+        url: "/api/backend/banner/index",
         method: "get",
-        params: this.listQuery
+        // params: this.listQuery,
       }).then(response => {
-        this.list = response.data.data;
+        console.log(response);
         this.total = response.data.total;
+
+        this.list = response.data.data;
         this.listLoading = false;
         console.log(this.list);
-
       });
     },
-    handleSizeChange (val) {
-      this.listQuery.limit = val;
-      this.getList();
+    goModified () {
+      this.$router.replace({ path: '/websiteModified' })
     },
-    handleCurrentChange (val) {
-      this.listQuery.page = val;
-      this.getList();
-    },
-    handleEdit (item) {
-      this.form = {
-        id: item.id,
-        name: item.name,
-      };
+    handleEdit (row) {
+      this.$router.replace({
+        path: '/websiteModified',
+        query: { id: row.id }
 
-      this.dialogVisible = true;
+      })
     },
     handleDelete (row) {
-      this.$confirm("确定要删除分点吗？", "提示", {
+      this.$confirm("确定要删除轮播图吗？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
         console.log(1234);
         request({
-          url: "/api/backend/courseType/delete",
+          url: "/api/backend/banner/delete",
           method: "post",
           data: { id: row.id },
         }).then(() => {
@@ -178,39 +136,24 @@ export default {
         });
       });
     },
-    handleFilter () {
-      this.listQuery.page = 1;
+    handleSizeChange (val) {
+      this.listQuery.limit = val;
       this.getList();
     },
-    saveData () {
-      if (!this.form.name) {
-        this.$message({
-          type: "warning",
-          message: "请输入学校分点名称"
-        });
-        return;
-      }
-
-      this.btnLoading = true;
-      request({
-        url: "/api/backend/courseType/store",
-        method: "post",
-        data: this.form
-      })
-        .then(() => {
-          this.btnLoading = false;
-          this.dialogVisible = false;
-          this.getList();
-          this.$message({
-            type: "success",
-            message: "操作成功!"
-          });
-        })
-        .finally(() => {
-          this.btnLoading = false;
-        });
+    handleCurrentChange (val) {
+      this.listQuery.page = val;
+      this.getList();
     },
+
 
   }
 }
 </script>
+
+<style scope>
+.user-avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 6px;
+}
+</style>

@@ -114,47 +114,105 @@ export const asyncRouterMap = [{
         }
       },
       {
-        path: 'courseList',
-        name: 'CourseList',
-        // redirect: '/course/courseList/courseModified',
-        component: () => import('@/views/course'),
+        path: 'index',
+        name: 'Index',
+        // redirect: '/course/courseList/index',
+        component: () => import('@/views/course/courseList/index'),
         meta: {
           title: '课程列表',
           // icon: 'table'
         },
-        children: [{
-            path: 'courseModified',
-            name: 'CourseModified',
-            component: () => import('@/views/course/courseList/courseModified'),
-            meta: {
-              title: '新增、修改课程',
-              // icon: 'table'
-            },
-          },
-          {
-            path: 'signUpDetail',
-            name: 'SignUpDetail',
-            component: () => import('@/views/course/courseList/signUpDetail'),
-            meta: {
-              title: '报名详情',
-              // icon: 'table'
-            },
-          },
-          {
-            path: 'courseTime',
-            name: 'CourseTime',
-            component: () => import('@/views/course/courseList/courseTime'),
-            meta: {
-              title: '上课时间设置',
-              // icon: 'table'
-            },
+        // children: [{
+        //     path: 'index',
+        //     name: 'index',
+        //     component: () => import('@/views/course/courseList/index'),
+        //     meta: {
+        //       title: '课程列表',
+        //       // icon: 'table'
+        //     },
+        //   },
+        //   {
+        //     path: 'courseModified',
+        //     name: 'CourseModified',
+        //     component: () => import('@/views/course/courseList/courseModified'),
+        //     meta: {
+        //       title: '新增、修改课程',
+        //       // icon: 'table'
+        //     },
+        //     // hidden: true
+        //   },
+        //   {
+        //     path: 'signUpDetail',
+        //     name: 'SignUpDetail',
+        //     component: () => import('@/views/course/courseList/signUpDetail'),
+        //     meta: {
+        //       title: '报名详情',
+        //       // icon: 'table'
+        //     },
+        //     hidden: true
+        //   },
+        //   {
+        //     path: 'courseTime',
+        //     name: 'CourseTime',
+        //     component: () => import('@/views/course/courseList/courseTime'),
+        //     meta: {
+        //       title: '上课时间设置',
+        //       // icon: 'table'
+        //     },
+        //     hidden: true
 
-          },
-        ]
+        //   },
+        // ]
       },
 
     ]
+  },
+
+  {
+    path: '/courseModify',
+    component: Layout,
+    name: 'CourseModify',
+    children: [{
+      path: '/courseModified',
+      component: () => import('@/views/course/courseList/courseModified'),
+    }],
+    meta: {
+      title: '新增、修改课程',
+      // icon: 'table'
+    },
+    hidden: true
   }, {
+    path: '/signUp',
+    component: Layout,
+    name: 'SignUp',
+    children: [{
+      path: '/signUpDetail',
+      component: () => import('@/views/course/courseList/signUpDetail'),
+    }],
+
+    meta: {
+      title: '报名详情',
+      // icon: 'table'
+    },
+    hidden: true
+  }, {
+    path: '/time',
+    component: Layout,
+    name: 'Time',
+    children: [{
+      path: '/courseTime',
+      component: () => import('@/views/course/courseList/courseTime'),
+    }],
+
+    meta: {
+      title: '上课时间设置',
+      // icon: 'table'
+    },
+    hidden: true
+
+  },
+
+  {
     path: '/website',
     component: Layout,
     // redirect: '/website/commonMes',
@@ -173,28 +231,80 @@ export const asyncRouterMap = [{
         }
       },
       {
-        path: 'banner',
-        name: 'Banner',
-        alwaysShow: true,
-        component: () => import('@/views/website'),
+        path: 'index',
+        name: 'Index',
+        // redirect: '/course/courseList/index',
+        component: () => import('@/views/website/banner/index'),
         meta: {
           title: '轮播图管理',
           // icon: 'table'
         },
         // redirect: '/website/banner/websiteModified',
-        children: [{
-          path: 'websiteModified',
-          name: 'WebsiteModified',
-          component: () => import('@/views/website/banner/websiteModified'),
-          meta: {
-            title: '新增、修改',
-            // icon: 'table'
-          }
-        }]
+        // children: [{
+        //     path: 'index',
+        //     name: 'Index',
+        //     component: () => import('@/views/website/banner/index'),
+        //     meta: {
+        //       title: '轮播图管理',
+        //       // icon: 'table'
+        //     }
+        //   },
+        //   {
+        //     path: 'websiteModified',
+        //     name: 'WebsiteModified',
+        //     component: () => import('@/views/website/banner/websiteModified'),
+        //     meta: {
+        //       title: '新增、修改',
+        //       // icon: 'table'
+        //     }
+        //   }
+        // ]
       },
-
+      {
+        path: 'question',
+        name: 'Question',
+        // redirect: '/course/courseList/index',
+        component: () => import('@/views/website/question'),
+        meta: {
+          title: '常见问题'
+          // icon: 'table'
+        },
+      }
     ]
-  }, {
+  },
+
+  {
+    component: Layout,
+    path: '/questionModify',
+    name: 'QuestionModify',
+    children: [{
+      path: '/questionModified',
+      component: () => import('@/views/website/questionModified'),
+    }],
+    meta: {
+      title: '新增、修改',
+      // icon: 'table'
+    },
+    hidden: true
+  },
+
+  {
+    component: Layout,
+    path: '/websiteModify',
+    name: 'WebsiteModify',
+    children: [{
+      path: '/websiteModified',
+      component: () => import('@/views/website/banner/websiteModified'),
+    }],
+
+    meta: {
+      title: '新增、修改',
+      // icon: 'table'
+    },
+    hidden: true
+  },
+
+  {
     path: '/finance',
     component: Layout,
     // redirect: '/finance/table',

@@ -6,19 +6,21 @@
       <el-button type="primary"
                  plain
                  style="float:right;"
-                 icon="el-icon-search">搜索</el-button>
+                 icon="el-icon-search"
+                 @click="handleFilter">搜索</el-button>
       <div style="float:right">
         <span class="demonstration"
               style="font-size:15px;">报名时间 </span>
-        <el-date-picker v-model="value2"
-                        type="daterange"
-                        align="right"
-                        unlink-panels
-                        style="margin:0 15px;"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        :picker-options="pickerOptions">
+        <el-date-picker style="margin-left:20px;"
+                        v-model="listQuery.start_date"
+                        type="date"
+                        placeholder="开始日期时间"
+                        value-format="yyyy-MM-dd"></el-date-picker>
+        至
+        <el-date-picker v-model="listQuery.end_date"
+                        type="date"
+                        placeholder="结束日期时间"
+                        value-format="yyyy-MM-dd">
         </el-date-picker>
       </div>
 
@@ -33,13 +35,13 @@
                        label="序号"
                        width="95">
         <template slot-scope="scope">
-          {{ scope.$index+1 }}
+          {{ scope.row.id }}
         </template>
       </el-table-column>
       <el-table-column label="时间"
                        align="center">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          {{ scope.row.date }}
         </template>
       </el-table-column>
       <el-table-column label="操作"
@@ -48,109 +50,144 @@
         <template slot-scope="scope">
           <el-button size="mini"
                      type="danger"
-                     @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                     @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
 
     </el-table>
 
-    <el-dialog title="提示"
-               :visible.sync="dialogVisible"
-               width="30%"
-               :before-close="handleClose">
-      <span>这是一段信息</span>
+    <el-dialog :visible.sync="dialogVisible"
+               width="30%">
+      <el-form>
+        <el-form-item label="时间">
+          <el-input v-model="form.date"
+                    placeholder="请输入时间"
+                    clearable />
+        </el-form-item>
+      </el-form>
       <span slot="footer"
             class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary"
-                   @click="dialogVisible = false">确 定</el-button>
+                   @click="saveData"
+                   :loading="btnLoading">提 交</el-button>
       </span>
     </el-dialog>
+
     <div class="block"
          style="margin-top:25px">
       <!-- <span class="demonstration">完整功能</span> -->
       <el-pagination @size-change="handleSizeChange"
                      @current-change="handleCurrentChange"
-                     :current-page="currentPage4"
+                     :current-page="listQuery.page"
                      :page-sizes="[5, 10, 20, 50,100]"
-                     :page-size="10"
+                     :page-size="listQuery.limit"
                      layout="total, sizes, prev, pager, next, jumper"
-                     :total="400">
+                     :total="total">
       </el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
-
+import request from "@/utils/request";
 export default {
-  filters: {
-    statusFilter (status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'gray',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    }
-  },
+
   data () {
     return {
-      input: '',
+      total: null,
       list: null,
       listLoading: true,
-      dialogVisible: false
+      btnLoading: false,
+      dialogVisible: false,
+      listQuery: {
+        page: 1,
+        limit: 10,
+        course_id: '',
+        start_date: '',
+        end_date: '',
+      },
+      form: {
+        date: '',
+      }
     }
   },
   created () {
-    this.fetchData()
+    this.getList()
   },
   methods: {
-    handleEdit (row) {
+    getList () {
+      this.listQuery.course_id = this.$route.query.course_id;
+      console.log(this.listQuery);
 
+      this.listLoading = true;
+      request({
+        url: "/api/backend/courseDate/index",
+        method: "get",
+        params: this.listQuery
+      }).then(response => {
+        this.total = response.data.total;
+
+        this.list = response.data.data;
+        this.listLoading = false;
+      });
+    },
+    handleFilter () {
+      this.listQuery.page = 1;
+      this.getList();
     },
     handleDelete (row) {
+      this.$confirm("确定要删除时间吗？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        console.log(1234);
+        request({
+          url: "/api/backend/courseDate/delete",
+          method: "post",
+          data: { id: row.id },
+        }).then(() => {
+          console.log(123);
 
+          // 删除最后一条数据时无数据问题
+          this.list.length <= 1 ? this.listQuery.page-- : false;
+          this.getList();
+          this.$message({
+            type: "success",
+            message: "操作成功!"
+          });
+        });
+      });
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`);
+      this.listQuery.limit = val;
+      this.getList();
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`);
+      this.listQuery.page = val;
+      this.getList();
     },
-    handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done();
+    saveData () {
+      this.btnLoading = true;
+      request({
+        url: "/api/backend/course/setCourseDate",
+        method: "post",
+        data: {
+          date: this.form.date,
+          course_id: this.listQuery.course_id        }
+      })
+        .then(() => {
+          this.getList()
+          this.$message({
+            type: "success",
+            message: "操作成功!"
+          });
         })
-        .catch(_ => { });
-    },
-    fetchData () {
-      this.listLoading = true
-      // getList().then(response => {
-      //   this.list = response.data.items
-      //   this.listLoading = false
-      // })
-      this.list = [
-        {
-          avatar: 'null',
-          nickname: '小红',
-          tel: '13112345678',
-          name: '红红',
-          register_time: '2019.12.12',
-        },
-        {
-          avatar: 'null',
-          nickname: '小红',
-          tel: '13112345678',
-          name: '红红',
-          register_time: '2019.12.12',
-        },
-
-      ]
-      this.listLoading = false
-    },
+        .finally(() => {
+          this.btnLoading = false;
+        });
+    }
 
 
   }

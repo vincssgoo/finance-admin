@@ -47,11 +47,13 @@
                  type="primary"
                  style="width:100%;margin-bottom:30px;"
                  @click.native.prevent="handleLogin">Login</el-button>
-
-      <div class="tips">
+      <el-row class="keep-login">
+        <el-checkbox v-model="loginForm.keepLogin">保持登录</el-checkbox>
+      </el-row>
+      <!-- <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span> password: any</span>
-      </div>
+      </div> -->
 
     </el-form>
   </div>
@@ -59,20 +61,21 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import request from '@/utils/request'
 
 export default {
   name: 'Login',
   data () {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('请输入正确的用户名'))
       } else {
         callback()
       }
     }
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('密码不能小于6位'))
       } else {
         callback()
       }
@@ -237,6 +240,12 @@ $light_gray: #eee;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+
+  .keep-login {
+    text-align: right;
+    margin-top: -20px;
+    padding: 10px 0;
   }
 }
 </style>
