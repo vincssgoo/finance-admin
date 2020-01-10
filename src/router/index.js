@@ -66,273 +66,267 @@ export default new Router({
 //动态需要根据权限加载的路由表
 //meta无permissions字段则不做权限控制
 export const asyncRouterMap = [{
-    path: '/user',
-    component: Layout,
+    path: '/financeMan',
     alwaysShow: true,
-    redirect: '/user/userList',
-    name: 'User',
-    meta: {
-      title: '用户管理',
-      icon: 'yonghuguanli'
-    },
-    children: [{
-        path: 'userList',
-        name: 'UserList',
-        component: () => import('@/views/user/userList'),
-        meta: {
-          title: '用户列表',
-          // icon: 'yonghuguanli'
-        }
-      },
-
-    ]
-  }, {
-    path: '/course',
     component: Layout,
-    // redirect: '/course/otherLocation',
-    name: 'Course',
-    meta: {
-      title: '课程管理',
-      icon: 'kechengguanli'
-    },
-    children: [{
-        path: 'otherLocation',
-        name: 'OtherLocation',
-        component: () => import('@/views/course/otherLocation'),
-        meta: {
-          title: '学校分点',
-          // icon: 'table'
-        }
-      },
-      {
-        path: 'subjectList',
-        name: 'SubjectList',
-        component: () => import('@/views/course/subjectList'),
-        meta: {
-          title: '科目列表',
-          // icon: 'table'
-        }
-      },
-      {
-        path: 'index',
-        name: 'Index',
-        // redirect: '/course/courseList/index',
-        component: () => import('@/views/course/courseList/index'),
-        meta: {
-          title: '课程列表',
-          // icon: 'table'
-        },
-        // children: [{
-        //     path: 'index',
-        //     name: 'index',
-        //     component: () => import('@/views/course/courseList/index'),
-        //     meta: {
-        //       title: '课程列表',
-        //       // icon: 'table'
-        //     },
-        //   },
-        //   {
-        //     path: 'courseModified',
-        //     name: 'CourseModified',
-        //     component: () => import('@/views/course/courseList/courseModified'),
-        //     meta: {
-        //       title: '新增、修改课程',
-        //       // icon: 'table'
-        //     },
-        //     // hidden: true
-        //   },
-        //   {
-        //     path: 'signUpDetail',
-        //     name: 'SignUpDetail',
-        //     component: () => import('@/views/course/courseList/signUpDetail'),
-        //     meta: {
-        //       title: '报名详情',
-        //       // icon: 'table'
-        //     },
-        //     hidden: true
-        //   },
-        //   {
-        //     path: 'courseTime',
-        //     name: 'CourseTime',
-        //     component: () => import('@/views/course/courseList/courseTime'),
-        //     meta: {
-        //       title: '上课时间设置',
-        //       // icon: 'table'
-        //     },
-        //     hidden: true
-
-        //   },
-        // ]
-      },
-
-    ]
-  },
-
-  {
-    path: '/courseModify',
-    component: Layout,
-    name: 'CourseModify',
-    children: [{
-      path: '/courseModified',
-      component: () => import('@/views/course/courseList/courseModified'),
-    }],
-    meta: {
-      title: '新增、修改课程',
-      // icon: 'table'
-    },
-    hidden: true
-  }, {
-    path: '/signUp',
-    component: Layout,
-    name: 'SignUp',
-    children: [{
-      path: '/signUpDetail',
-      component: () => import('@/views/course/courseList/signUpDetail'),
-    }],
-
-    meta: {
-      title: '报名详情',
-      // icon: 'table'
-    },
-    hidden: true
-  }, {
-    path: '/time',
-    component: Layout,
-    name: 'Time',
-    children: [{
-      path: '/courseTime',
-      component: () => import('@/views/course/courseList/courseTime'),
-    }],
-
-    meta: {
-      title: '上课时间设置',
-      // icon: 'table'
-    },
-    hidden: true
-
-  },
-
-  {
-    path: '/website',
-    component: Layout,
-    // redirect: '/website/commonMes',
-    name: 'Website',
-    meta: {
-      title: '建站管理',
-      icon: 'jianzhan'
-    },
-    children: [{
-        path: 'commonMes',
-        name: 'CommonMes',
-        component: () => import('@/views/website/commonMes'),
-        meta: {
-          title: '公共信息',
-          // icon: 'table'
-        }
-      },
-      {
-        path: 'index',
-        name: 'Index',
-        // redirect: '/course/courseList/index',
-        component: () => import('@/views/website/banner/index'),
-        meta: {
-          title: '轮播图管理',
-          // icon: 'table'
-        },
-        // redirect: '/website/banner/websiteModified',
-        // children: [{
-        //     path: 'index',
-        //     name: 'Index',
-        //     component: () => import('@/views/website/banner/index'),
-        //     meta: {
-        //       title: '轮播图管理',
-        //       // icon: 'table'
-        //     }
-        //   },
-        //   {
-        //     path: 'websiteModified',
-        //     name: 'WebsiteModified',
-        //     component: () => import('@/views/website/banner/websiteModified'),
-        //     meta: {
-        //       title: '新增、修改',
-        //       // icon: 'table'
-        //     }
-        //   }
-        // ]
-      },
-      {
-        path: 'question',
-        name: 'Question',
-        // redirect: '/course/courseList/index',
-        component: () => import('@/views/website/question'),
-        meta: {
-          title: '常见问题'
-          // icon: 'table'
-        },
-      }
-    ]
-  },
-
-  {
-    component: Layout,
-    path: '/questionModify',
-    name: 'QuestionModify',
-    children: [{
-      path: '/questionModified',
-      component: () => import('@/views/website/questionModified'),
-    }],
-    meta: {
-      title: '新增、修改',
-      // icon: 'table'
-    },
-    hidden: true
-  },
-
-  {
-    component: Layout,
-    path: '/websiteModify',
-    name: 'WebsiteModify',
-    children: [{
-      path: '/websiteModified',
-      component: () => import('@/views/website/banner/websiteModified'),
-    }],
-
-    meta: {
-      title: '新增、修改',
-      // icon: 'table'
-    },
-    hidden: true
-  },
-
-  {
-    path: '/finance',
-    component: Layout,
-    // redirect: '/finance/table',
-    name: 'Finance',
+    redirect: '/financeMan/statistics',
+    name: 'financeMan',
     meta: {
       title: '财务管理',
       icon: 'caiwu'
     },
     children: [{
-        path: 'saleStatistic',
-        name: 'SaleStatistic',
-        component: () => import('@/views/finance/saleStatistic'),
+        path: 'statistics',
+        name: 'Statistics',
+        component: () => import('@/views/financeMan/statistics'),
         meta: {
-          title: '流水统计',
-          // icon: 'table'
+          title: '财务统计',
+        },
+      },
+      {
+        path: 'income',
+        name: 'Income',
+        component: () => import('@/views/financeMan/income'),
+        meta: {
+          title: '财务收入',
         }
       },
       {
-        path: 'financeStatement',
-        name: 'FinanceStatement',
-        component: () => import('@/views/finance/financeStatement'),
+        path: 'proof',
+        name: 'Proof',
+        component: () => import('@/views/financeMan/proof'),
         meta: {
-          title: '财务结算',
-          // icon: 'table'
+          title: '凭证',
+        },
+        hidden: true
+      },
+      {
+        path: 'proofOut',
+        name: 'ProofOut',
+        component: () => import('@/views/financeMan/proofOut'),
+        meta: {
+          title: '支出凭证',
+        },
+        hidden: true
+      },
+      {
+        path: 'bxproof',
+        name: 'Bxproof',
+        component: () => import('@/views/financeMan/bxproof'),
+        meta: {
+          title: '报销凭证',
+        },
+        hidden: true
+      },
+      {
+        path: 'new',
+        name: 'New',
+        component: () => import('@/views/financeMan/new'),
+        meta: {
+          title: '新建收入',
+        },
+        hidden: true
+      },
+      {
+        path: 'newOut',
+        name: 'NewOut',
+        component: () => import('@/views/financeMan/newOut'),
+        meta: {
+          title: '新建支出',
+        },
+        hidden: true
+      },
+      {
+        path: 'log',
+        name: 'Log',
+        component: () => import('@/views/financeMan/log'),
+        meta: {
+          title: '收入操作日志',
+        },
+      },
+
+      {
+        path: 'outcome',
+        name: 'Outcome',
+        component: () => import('@/views/financeMan/outcome'),
+        meta: {
+          title: '财务支出',
         }
+      }, {
+        path: 'incomeMan',
+        name: 'IncomeMan',
+        component: () => import('@/views/financeMan/incomeMan'),
+        meta: {
+          title: '收入类型管理',
+        },
+        // hidden: true
+      }, {
+        path: 'outcomeMan',
+        name: 'OutcomeMan',
+        component: () => import('@/views/financeMan/outcomeMan'),
+        meta: {
+          title: '支出类型管理',
+        },
+        // hidden: true
+      }, {
+        path: 'logOut',
+        name: 'LogOut',
+        component: () => import('@/views/financeMan/logOut'),
+        meta: {
+          title: '支出操作日志',
+        },
+        // hidden: true
+      },
+    ]
+  },
+  {
+    path: '/reimbursementMan',
+    alwaysShow: true,
+    component: Layout,
+    redirect: '/reimbursementMan/list',
+    name: 'reimbursementMan',
+    meta: {
+      title: '报销管理',
+      icon: 'baoxiao'
+    },
+    children: [{
+        path: 'list',
+        name: 'List',
+        component: () => import('@/views/reimbursementMan/list'),
+        meta: {
+          title: '报销申请列表',
+        },
+      },
+      {
+        path: 'handle',
+        name: 'Handle',
+        component: () => import('@/views/reimbursementMan/handle'),
+        meta: {
+          title: '处理',
+        },
+        hidden: true
+      },
+      {
+        path: 'detail',
+        name: 'Detail',
+        component: () => import('@/views/reimbursementMan/detail'),
+        meta: {
+          title: '查看详情',
+        },
+        hidden: true
+      },
+      {
+        path: 'log',
+        name: 'Log',
+        component: () => import('@/views/reimbursementMan/log'),
+        meta: {
+          title: '操作日志',
+        }
+      },
+    ]
+  },
+  {
+    path: '/reconciliationMan',
+    alwaysShow: true,
+    component: Layout,
+    redirect: '/reconciliationMan/profitLoss',
+    name: 'ReconciliationMan',
+    meta: {
+      title: '对账管理',
+      icon: 'zhangben'
+    },
+    children: [{
+        path: 'profitLoss',
+        name: 'ProfitLoss',
+        component: () => import('@/views/reconciliationMan/profitLoss'),
+        meta: {
+          title: '盈亏对账',
+        },
       },
 
     ]
+  },
+  {
+    path: '/projectMan',
+    alwaysShow: true,
+    component: Layout,
+    redirect: '/projectMan/list',
+    name: 'projectMan',
+    meta: {
+      title: '项目管理',
+      icon: 'xiangmu'
+    },
+    children: [{
+        path: 'list',
+        name: 'List',
+        component: () => import('@/views/projectMan/list'),
+        meta: {
+          title: '项目列表',
+        },
+      },
+      {
+        path: 'modify',
+        name: 'Modify',
+        component: () => import('@/views/projectMan/modify'),
+        meta: {
+          title: '新增、修改',
+        },
+        hidden: true,
+      },
+      {
+        path: 'record',
+        name: 'Record',
+        component: () => import('@/views/projectMan/record'),
+        meta: {
+          title: '回款记录',
+        },
+        hidden: true,
+      }, {
+        path: 'newRecord',
+        name: 'NewRecord',
+        component: () => import('@/views/projectMan/newRecord'),
+        meta: {
+          title: '新增回款',
+        },
+        hidden: true,
+      },
+      {
+        path: 'typeMan',
+        name: 'TypeMan',
+        component: () => import('@/views/projectMan/typeMan'),
+        meta: {
+          title: '项目类型管理',
+        },
+      }, {
+        path: 'projReturn',
+        name: 'ProjReturn',
+        component: () => import('@/views/projectMan/projReturn'),
+        meta: {
+          title: '项目回款',
+        },
+      },
+
+    ]
+  },
+  {
+    path: '',
+    component: Layout,
+    alwaysShow: true,
+    name: 'System',
+    meta: {
+      title: '权限管理',
+      permissions: ['admin'],
+      icon: 'quanxian'
+    },
+    children: [{
+      path: '/admin/list',
+      name: 'Admin',
+      component: () => import('@/views/admin/index'),
+      meta: {
+        title: '账户列表',
+        permissions: ['admin']
+      }
+    }]
   },
   {
     path: '*',
