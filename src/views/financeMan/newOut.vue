@@ -54,7 +54,7 @@
       </el-form-item>
       <el-form-item label="凭证">
 
-        <UploadList :list="proofList"></UploadList>
+        <UploadList v-model="form.pay_proof"></UploadList>
       </el-form-item>
 
     </el-form>
@@ -99,7 +99,6 @@ export default {
       btnLoading: false,
       listLoading: true,
       typeList: null,
-      proofList: null,
     }
   },
   created () {
@@ -107,10 +106,6 @@ export default {
       this.getDetail()
     }
     this.getTypeList();
-    if (this.proofList == null) {
-      this.proofList = []
-    }
-    // this.getSchoolList();
   },
   methods: {
     getTypeList () {
@@ -141,22 +136,7 @@ export default {
         params: { id: this.$route.query.id }
       }).then(response => {
         // this.list = response.data.data;
-        this.list = response.data
-        console.log(this.list);
-        this.form = {
-          id: this.list.id,
-          desc: this.list.desc,
-          pay_datetime: this.list.pay_datetime,
-          price: this.list.price,
-          type_id: this.list.type_id,
-          content: this.list.content,
-          create_user: this.list.create_user,
-          pay_proof: this.list.pay_proof,
-          expense_proof: this.list.expense_proof,
-        }
-
-
-
+        this.form = response.data
       }).catch(err => {
         console.log(err);
 
@@ -166,17 +146,17 @@ export default {
       this.$router.replace({ path: '/financeMan/outcome' })
     },
     saveData () {
-      this.btnLoading = true;
-      console.log(this.form);
-      if (this.proofList) {
-        this.form.pay_proof = this.proofList
-      }
-      if (this.form.pay_datetime == null || this.form.pay_datetime != this.list.pay_datetime) {
+      if (this.form.pay_datetime) {
         this.form.pay_datetime = moment(this.form.pay_datetime).format('YYYY-M-DD h:mm:ss')
-        console.log(123);
-
       }
-
+      if(!this.form.pay_datetime || !this.form.desc || !this.form.price || !this.form.type_id || !this.form.create_user) {
+        this.$message({
+            type: "error",
+            message: "请填写完整!"
+          });
+        return
+      }
+      this.btnLoading = true;
       request({
         url: "/api/backend/pay/store",
         method: "post",
