@@ -18,6 +18,30 @@
           {{ scope.$index+1 }}
         </template>
       </el-table-column>
+      <el-table-column label="公司"
+                       align="center"
+                       width="150"
+                       v-if="routerName === 'ProjReturn'">
+        <template slot-scope="scope">
+          {{ scope.row.project.company }}
+        </template>
+      </el-table-column>
+      <el-table-column label="项目名称"
+                       align="center"
+                       width="150"
+                       v-if="routerName === 'ProjReturn'">
+        <template slot-scope="scope">
+          {{ scope.row.project.name }}
+        </template>
+      </el-table-column>
+      <el-table-column label="项目编号"
+                       align="center"
+                       width="150"
+                       v-if="routerName === 'ProjReturn'">
+        <template slot-scope="scope">
+          {{ scope.row.project.project_no }}
+        </template>
+      </el-table-column>
       <el-table-column label="回款金额"
                        align="center"
                        width="150">
@@ -111,9 +135,19 @@ export default {
   },
   created () {
     this.routerName = this.$route.name
-    console.log(this.routerName)
     this.listQuery.project_id = this.$route.query.project_id ? this.$route.query.project_id : ''
     this.getList()
+  },
+  watch: {
+    '$route' (to, from) { //监听路由是否变化
+      this.routerName = this.$route.name
+      if(this.name === 'ProjReturn'){
+        this.listQuery.project_id = ''
+      }else if(this.name === 'Record'){
+        this.listQuery.project_id = this.$route.query.project_id
+      }
+      this.getList()
+    }
   },
   methods: {
     handleEdit (row) {
@@ -124,7 +158,7 @@ export default {
     },
     goNew () {
       this.$router.push({        path: '/projectMan/newRecord', query: {
-          project_id: row.project_id,
+          project_id: this.$route.query.project_id,
         }      })
     },
     getList () {
@@ -140,7 +174,7 @@ export default {
       });
     },
     backIndex () {
-      this.$router.replace({ path: '/projectMan/list?' })
+      this.$router.push({ path: '/projectMan/list?' })
     },
     handleSizeChange (val) {
       this.listQuery.limit = val;

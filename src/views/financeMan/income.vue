@@ -2,7 +2,7 @@
   <div class="app-container">
     <div style="margin-bottom:15px;">
       <el-button type="primary" @click="goNew">新建</el-button>
-      <span style="margin-left:40px;">时间段</span>
+      <span style="margin-left:40px;">签约时间</span>
       <el-date-picker
         style="margin-left:20px;width: 150px;"
         v-model="listQuery.start_datetime"
@@ -17,33 +17,50 @@
         placeholder="结束日期时间"
         value-format="yyyy-MM-dd"
       ></el-date-picker>
-      <el-button
-        type="primary"
-        plain
-        style="float:right;"
-        icon="el-icon-search"
-        @click="handleFilter(value)"
-      >搜索</el-button>
+      <span style="margin-left:40px;">录入时间</span>
+      <el-date-picker
+        style="margin-left:20px;width: 150px;"
+        v-model="listQuery.income_start_datetime"
+        type="date"
+        placeholder="开始日期时间"
+        value-format="yyyy-MM-dd"
+      ></el-date-picker>至
+      <el-date-picker
+        style="width: 150px;"
+        v-model="listQuery.income_end_datetime"
+        type="date"
+        placeholder="结束日期时间"
+        value-format="yyyy-MM-dd"
+      ></el-date-picker>
+      <div style="margin-top:20px;margin-left:100px;">
       <el-select
         v-model="listQuery.type_id"
         placeholder="类型"
-        style="float:right;width:120px;margin-right:20px"
+        style="width:120px;margin-right:20px"
         clearable
       >
-        <el-option v-for="item in typeList" :label="item.title" :value="item.id"></el-option>
+        <el-option v-for="item in typeList" :label="item.title" :value="item.id" :key="item.id"></el-option>
       </el-select>
       <el-input
         placeholder="收入说明"
         v-model="listQuery.keyword"
-        style="width: 150px;float:right;margin-right:20px"
+        style="width: 150px;"
         clearable
       ></el-input>
       <el-input
         placeholder="编号"
         v-model="listQuery.no"
-        style="width: 150px;float:right;margin-right:20px"
+        style="width: 150px;margin-right:20px"
         clearable
       ></el-input>
+        <el-button
+        type="primary"
+        plain
+        style=""
+        icon="el-icon-search"
+        @click="handleFilter(value)"
+      >搜索</el-button>
+      </div>
     </div>
     <div style="margin-bottom:15px">
       <span>总收入:{{income_sum}}</span>
@@ -156,7 +173,9 @@ export default {
         end_datetime: "",
         start_datetime: "",
         no: "",
-        type_id: ""
+        type_id: "",
+        income_end_datetime: "",
+        income_start_datetime: "",
       },
       income_sum: null,
       btnLoading: false,
@@ -174,10 +193,10 @@ export default {
   },
   methods: {
     goNew() {
-      this.$router.replace({ path: "/financeMan/new" });
+      this.$router.push({ path: "/financeMan/new" });
     },
     goProof(row) {
-      this.$router.replace({
+      this.$router.push({
         path: "/financeMan/proof",
         query: { id: row.id }
       });
@@ -204,12 +223,16 @@ export default {
       // this.listQuery.sale_status = ''
     },
     handleEdit(row) {
-      this.$router.replace({
+      this.$router.push({
         path: "/financeMan/new",
         query: { id: row.id }
       });
     },
     getList() {
+      this.listQuery.start_datetime = this.listQuery.start_datetime ? this.listQuery.start_datetime + " 00:00:00" : ""
+      this.listQuery.end_datetime = this.listQuery.end_datetime ? this.listQuery.end_datetime + " 23:59:59" : ""
+      this.listQuery.income_start_datetime = this.listQuery.income_start_datetime ? this.listQuery.income_start_datetime + " 23:59:59" : ""
+      this.listQuery.income_end_datetime = this.listQuery.income_end_datetime ? this.listQuery.income_end_datetime + " 23:59:59" : ""
       this.listLoading = true;
       request({
         url: "/api/backend/income/index",

@@ -3,7 +3,7 @@
     <div style="margin-bottom:15px;">
       <el-button type="primary"
                  @click="goNew">新建</el-button>
-      <span style="margin-left:40px;">时间段</span>
+      <span style="margin-left:40px;">签约时间</span>
       <el-date-picker style="margin-left:20px;width: 150px;"
                       type="date"
                       v-model="listQuery.start_datetime"
@@ -16,14 +16,22 @@
                       placeholder="结束日期时间"
                       value-format="yyyy-MM-dd">
       </el-date-picker>
-      <el-button type="primary"
-                 plain
-                 style="float:right;"
-                 icon="el-icon-search"
-                 @click="handleFilter(value)">搜索</el-button>
+      <span style="margin-left:10px;">录入时间</span>
+      <el-date-picker style="margin-left:20px;width: 150px;"
+                      type="date"
+                      v-model="listQuery.start_datetime"
+                      placeholder="开始日期时间"
+                      value-format="yyyy-MM-dd"></el-date-picker>
+      至
+      <el-date-picker style="width: 150px;"
+                      type="date"
+                      v-model="listQuery.end_datetime"
+                      placeholder="结束日期时间"
+                      value-format="yyyy-MM-dd">
+      </el-date-picker>
       <el-select v-model="value"
                  placeholder="状态"
-                 style="width:120px;margin-right:20px;float:right"
+                 style="width:120px"
                  clearable>
         <el-option v-for="item in options"
                    :key="item.value"
@@ -33,23 +41,29 @@
       </el-select>
       <el-select v-model="listQuery.type_id"
                  placeholder="类型"
-                 style="float:right;width:120px;margin-right:20px">
+                 style="">
         <el-option v-for="item in typeList"
                    :label="item.title"
                    :value="item.id">
         </el-option>
       </el-select>
 
-      <el-input placeholder="公司名称"
+      <div style="margin-top:10px;">
+        <el-input placeholder="公司名称"
                 v-model="listQuery.company_name"
-                style="width: 150px;float:right;margin-right:80px"
+                style="width: 150px;"
                 clearable>
       </el-input>
       <el-input placeholder="项目名称"
                 v-model="listQuery.project_name"
-                style="width: 150px;float:right;margin-right:20px"
+                style="width: 150px;"
                 clearable>
       </el-input>
+      <el-button type="primary"
+                 plain
+                 icon="el-icon-search"
+                 @click="handleFilter(value)">搜索</el-button>
+      </div>
 
     </div>
     <div style="margin-bottom:15px">
@@ -136,16 +150,9 @@
                        label="状态"
                        width="95">
         <template slot-scope="scope">
-          <div v-if="scope.row.returned_percent == '0' ">
-            新建
-          </div>
-          <div v-else-if="scope.row.returned_percent > '0' && scope.row.returned_percent < '100'"
-               style="color:red">
-            进行中
-          </div>
-          <div v-else-if="scope.row.returned_percent == '100' ">
-            已完成
-          </div>
+          <el-tag v-if="scope.row.returned_percent == 0 " type="primary">新建</el-tag>
+          <el-tag v-if="scope.row.returned_percent > 0 && scope.row.returned_percent < 100" type="success">进行中</el-tag>
+          <el-tag v-if="scope.row.returned_percent == 100" type="danger">已完成</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center"
@@ -178,9 +185,11 @@
         <template slot-scope="scope"
                   style="">
           <div>
-            <el-button @click="handleEdit(scope.row)"
+            <el-button class="btns" @click="handleEdit(scope.row)"
                        type="warning">修改</el-button>
-            <el-button @click="goRecord(scope.row)"
+            <el-button class="btns" @click="handleDelete(scope.row)"
+            type="danger">删除</el-button>
+            <el-button class="btns" @click="goRecord(scope.row)"
                        type="primary">回款记录</el-button>
           </div>
 
@@ -288,7 +297,7 @@ export default {
       this.getList();
     },
     handleEdit (row) {
-      this.$router.replace({
+      this.$router.push({
         path: '/projectMan/modify',
         query: { id: row.id }
 
@@ -312,6 +321,10 @@ export default {
       // this.listQuery.sale_status = ''
     },
     getList () {
+      this.listQuery.start_datetime = this.listQuery.start_datetime ? this.listQuery.start_datetime + " 00:00:00" : ""
+      this.listQuery.end_datetime = this.listQuery.end_datetime ? this.listQuery.end_datetime + " 23:59:59" : ""
+      this.listQuery.income_start_datetime = this.listQuery.income_start_datetime ? this.listQuery.income_start_datetime + " 23:59:59" : ""
+      this.listQuery.income_end_datetime = this.listQuery.income_end_datetime ? this.listQuery.income_end_datetime + " 23:59:59" : ""
       this.listLoading = true;
       request({
         url: "/api/backend/project/index",
@@ -328,7 +341,30 @@ export default {
         console.log(this.list);
       });
     },
-
+    handleDelete(row) {
+      this.$confirm("确认删除, 是否继续?", "提示", {
+        type: "warning"
+      })
+        .then(() => {
+          request({
+            url: "/api/backend/project/delete",
+            method: "post",
+            data: { id: row.id }
+          }).then(() => {
+            this.getList();
+            this.$message({
+              type: "success",
+              message: "删除成功!"
+            });
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消"
+          });
+        });
+    },
 
 
   },
@@ -337,3 +373,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .btns {
+    margin-bottom: 5px;
+  }
+</style>

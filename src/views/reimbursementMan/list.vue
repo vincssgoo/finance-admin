@@ -117,8 +117,8 @@
                        label="处理人"
                        width="105">
         <template slot-scope="scope">
-          <div v-if="scope.row.editor!=null">
-            {{ scope.row.editor.nickname }}
+          <div v-if="scope.row.handler">
+            {{ scope.row.handler.nickname }}
           </div>
           <div v-else></div>
         </template>
@@ -216,21 +216,21 @@ export default {
   },
   methods: {
     goDetail (row) {
-      this.$router.replace({
+      this.$router.push({
         path: '/reimbursementMan/detail',
         query: { id: row.id }
 
       })
     },
     goHandle (row) {
-      this.$router.replace({
+      this.$router.push({
         path: '/reimbursementMan/handle',
         query: { id: row.id }
 
       })
     },
     handleEdit (row) {
-      this.$router.replace({
+      this.$router.push({
         path: '/reimbursementMan/handle',
         query: { id: row.id }
 

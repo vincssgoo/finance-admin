@@ -107,17 +107,25 @@ export default {
         );
         this.myChart2 = echarts.init(document.getElementById('myChart2'))
         this.lineData[1] = res.data.income_percent;
+        this.lineData[4] = res.data.income_type
         this.myChart4 = echarts.init(document.getElementById('myChart4'))
         this.lineData[3] = res.data.pay_percent;
+        this.lineData[5] = res.data.pay_type
         this.myChart2.setOption({
           title: {
             text:'收入详情',
-            left: 'center'
+            left: 'center',
+            top:50
           },
           tooltip: {
             trigger: 'item',
             formatter: '{a} <br/>{b} : {c} ({d}%)'
           },
+          legend: {
+              orient: 'vertical',
+              left: 'left',
+              data: this.lineData[4]
+            },
           series: [
             {
               name: '收入来源',
@@ -138,11 +146,17 @@ export default {
         this.myChart4.setOption({
             title: {
               text:'支出详情',
-              left: 'center'
+              left: 'center',
+            top:50
             },
             tooltip: {
               trigger: 'item',
               formatter: '{a} <br/>{b} : {c} ({d}%)'
+            },
+            legend: {
+              orient: 'vertical',
+              left: 'left',
+              data: this.lineData[5]
             },
             series: [
               {
@@ -150,7 +164,7 @@ export default {
                 type: 'pie',
                 radius: '55%',
                 center: ['50%', '60%'],
-                data:this.lineData[3].sort(function (a, b) { return a.value - b.value; }),
+                data:this.lineData[3],
                 emphasis: {
                   itemStyle: {
                     color: '#c23531',

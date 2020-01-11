@@ -191,7 +191,7 @@ export default {
         });
     },
     backIndex () {
-      this.$router.replace({ path: '/reimbursementMan/list' })
+      this.$router.push({ path: '/reimbursementMan/list' })
     },
 
 

@@ -106,6 +106,7 @@ export default {
       request({
         url: "/api/backend/projectType/index",
         method: "get",
+        params:{status:1}
       }).then(response => {
         this.typeList = response.data.data;
         this.listLoading = false;
@@ -155,7 +156,7 @@ export default {
     },
 
     backIndex () {
-      this.$router.replace({ path: '/projectMan/list' })
+      this.$router.push({ path: '/projectMan/list' })
     },
 
 

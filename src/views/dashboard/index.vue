@@ -17,7 +17,7 @@ export default {
   // },
   created () {
     // let firstRoute = this.$store.state.permissions.addRouters[0]
-    this.$router.replace({ path: '/financeMan' })
+    this.$router.push({ path: '/financeMan' })
   },
   render: function (h) {
     return h() // avoid warning message

@@ -139,7 +139,7 @@ export default {
       });
     },
     backIndex () {
-      this.$router.replace({ path: '/financeMan/outcome' })
+      this.$router.push({ path: '/financeMan/outcome' })
     },
     saveData () {
       if (this.form.pay_datetime) {
@@ -152,6 +152,7 @@ export default {
           });
         return
       }
+      this.form.expense_proof = []
       this.btnLoading = true;
       request({
         url: "/api/backend/pay/store",

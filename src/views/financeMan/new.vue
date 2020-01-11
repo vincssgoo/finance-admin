@@ -125,7 +125,7 @@ export default {
         });
     },
     backIndex() {
-      this.$router.replace({ path: "/financeMan/income" });
+      this.$router.push({ path: "/financeMan/income" });
     },
     saveData() {
       if (this.form.income_datetime) {

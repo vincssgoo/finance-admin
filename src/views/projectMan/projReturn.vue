@@ -111,7 +111,7 @@ export default {
   },
   methods: {
     goNew () {
-      this.$router.replace({ path: '/projectMan/newRecord' })
+      this.$router.push({ path: '/projectMan/newRecord' })
     },
     getList () {
       this.listLoading = true;

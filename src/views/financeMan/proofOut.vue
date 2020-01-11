@@ -50,7 +50,7 @@ export default {
   methods: {
 
     backIndex () {
-      this.$router.replace({ path: '/financeMan/outcome' })
+      this.$router.push({ path: '/financeMan/outcome' })
     },
     getList () {
       this.listLoading = true;

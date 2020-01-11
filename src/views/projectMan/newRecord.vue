@@ -78,7 +78,7 @@ export default {
       });
     },
     backIndex () {
-      this.$router.replace({        path: '/projectMan/record', query: {
+      this.$router.push({        path: '/projectMan/record', query: {
           project_id: this.form.project_id
         }      })
     },
