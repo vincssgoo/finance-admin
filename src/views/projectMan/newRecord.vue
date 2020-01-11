@@ -73,13 +73,8 @@ export default {
       }).then(response => {
         // this.list = response.data.data;
         this.form = response.data
-        console.log(this.form);
-
-
-
       }).catch(err => {
         console.log(err);
-
       });
     },
     backIndex () {
@@ -92,7 +87,7 @@ export default {
       request({
         url: "/api/backend/returnedMoney/haveReturnedPercent",
         method: "get",
-        params: this.form.project_id
+        params: {project_id:this.$route.query.project_id}
       }).then(response => {
         this.data = response.data;
         this.listLoading = false;

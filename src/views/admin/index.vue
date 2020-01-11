@@ -1,130 +1,94 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button class="filter-item"
-                 type="primary"
-                 icon="el-icon-edit"
-                 @click="handleCreate">添加</el-button>
+      <el-button class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
     </div>
-
-    <el-table v-loading="listLoading"
-              :data="list"
-              element-loading-text="Loading"
-              border
-              fit
-              highlight-current-row>
-      <el-table-column align="center"
-                       label="ID"
-                       width="95">
+    <div style="margin-bottom:20px">
+      <el-input v-model="listQuery.search" style="width:250px" placeholder="请输入名称/登录账号" clearable></el-input>
+      <el-button type="success" @click="search">搜索</el-button>
+    </div>
+    <el-table
+      v-loading="listLoading"
+      :data="list"
+      element-loading-text="Loading"
+      border
+      fit
+      highlight-current-row>
+      <el-table-column align="center" label="ID" width="80">
         <template slot-scope="scope">
           {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="用户名"
-                       min-width="110"
-                       align="center">
+      <el-table-column label="名称" min-width="90" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.nickname }}
+        </template>
+      </el-table-column>
+      <el-table-column label="登录账号" min-width="90" align="center">
         <template slot-scope="scope">
           {{ scope.row.username }}
         </template>
       </el-table-column>
-      <el-table-column label="角色"
-                       min-width="110"
-                       align="center">
+      <el-table-column label="权限" min-width="110" align="center">
         <template slot-scope="scope">
-          <el-tag class="m-r-5"
-                  type="success"
-                  v-for="role in scope.row.roles"> {{role.name}} </el-tag>
+          <el-tag class="m-r-5" type="success" v-for="role in scope.row.permissions" :key="role.id"> {{role.display_name}} </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center"
-                       prop="created_at"
-                       label="创建时间"
-                       min-width="200">
+      <el-table-column align="center" prop="created_at" label="创建时间" min-width="110">
         <template slot-scope="scope">
-          <i class="el-icon-time" />
+          <i class="el-icon-time"/>
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作"
-                       align="center"
-                       width="180"
-                       class-name="small-padding fixed-width">
-        <template v-if="scope.row.id != 1"
-                  slot-scope="scope">
+      <el-table-column align="center" prop="created_at" label="最后登录时间" min-width="110">
+        <template slot-scope="scope">
+          <i class="el-icon-time"/>
+          <span>{{ scope.row.last_login_at }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" min-width="100" >
+        <template v-if="scope.row.id != 1" slot-scope="scope">
           <el-row>
-            <el-button type="primary"
-                       size="mini"
-                       @click="handleUpdate(scope.row)">编辑</el-button>
-            <el-button type="danger"
-                       size="mini"
-                       @click="handleDel(scope.row.id)">删除</el-button>
+            <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+            <el-button type="danger" size="mini" @click="handleDel(scope.row.id)">删除</el-button>
           </el-row>
         </template>
       </el-table-column>
     </el-table>
 
     <div class="pagination-container">
-      <el-pagination :current-page="listQuery.page"
-                     :page-sizes="[10,20,30, 50]"
-                     :page-size="listQuery.limit"
-                     :total="total"
-                     background
-                     layout="total, sizes, prev, pager, next, jumper"
-                     @size-change="handleSizeChange"
-                     @current-change="handleCurrentChange" />
+      <el-pagination :current-page="listQuery.page" :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" :total="total" background layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"/>
     </div>
 
-    <el-dialog :title="textMap[dialogStatus]"
-               :visible.sync="dialogFormVisible"
-               :close-on-click-modal="false">
-      <el-form ref="form"
-               :rules="rules[dialogStatus]"
-               :model="form"
-               label-position="left"
-               label-width="70px"
-               style="width: 400px; margin-left:50px;">
-        <el-form-item label="用户名"
-                      prop="username">
-          <el-input v-model="form.username" />
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
+      <el-form ref="form" :rules="rules[dialogStatus]" :model="form" label-position="left" label-width="90px" style="width: 400px; margin-left:50px;">
+        <el-form-item label="名称" prop="nickname">
+          <el-input v-model="form.nickname"/>
         </el-form-item>
-        <el-form-item label="密码"
-                      prop="password">
-          <el-input type="text"
-                    v-model="form.password" />
+        <el-form-item label="登录账号" prop="username">
+          <el-input v-model="form.username"/>
         </el-form-item>
-        <el-form-item label="角色"
-                      prop="roles">
-          <el-checkbox :indeterminate="isIndeterminateRoles"
-                       v-model="checkAllRoles"
-                       @change="handleCheckAllRolesChange">全选</el-checkbox>
+        <el-form-item label="登录密码" prop="password">
+          <el-input type="text" v-model="form.password"/>
+        </el-form-item>
+        <!-- <el-form-item label="角色" prop="roles">
+          <el-checkbox :indeterminate="isIndeterminateRoles" v-model="checkAllRoles" @change="handleCheckAllRolesChange">全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
-          <el-checkbox-group v-model="form.roles"
-                             @change="handleCheckedRolesChange">
-            <el-checkbox v-for="role in allRoles"
-                         :label="role.id"
-                         :key="role.id">{{role.name}}</el-checkbox>
+          <el-checkbox-group v-model="form.roles" @change="handleCheckedRolesChange">
+            <el-checkbox v-for="role in allRoles" :label="role.id" :key="role.id">{{role.name}}</el-checkbox>
           </el-checkbox-group>
-        </el-form-item>
-        <el-form-item label="权限"
-                      prop="permissions">
-          <el-checkbox :indeterminate="isIndeterminatePermissions"
-                       v-model="checkAllPermissions"
-                       @change="handleCheckAllPermissionsChange">全选</el-checkbox>
+        </el-form-item> -->
+        <el-form-item label="权限" prop="permissions">
+          <el-checkbox :indeterminate="isIndeterminatePermissions" v-model="checkAllPermissions" @change="handleCheckAllPermissionsChange">全选</el-checkbox>
           <div style="margin: 15px 0;"></div>
-          <el-checkbox-group v-model="form.permissions"
-                             @change="handleCheckedPermissionsChange">
-            <el-checkbox v-for="permission in allPermissions"
-                         :label="permission.id"
-                         :key="permission.id">{{permission.display_name}}</el-checkbox>
+          <el-checkbox-group v-model="form.permissions" @change="handleCheckedPermissionsChange">
+            <el-checkbox v-for="permission in allPermissions" :label="permission.id" :key="permission.id">{{permission.display_name}}</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
       </el-form>
-      <div slot="footer"
-           class="dialog-footer">
+      <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary"
-                   @click="saveData"
-                   :loading="btnLoading">确定</el-button>
+        <el-button type="primary" @click="saveData" :loading="btnLoading">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -136,7 +100,7 @@ import request from '@/utils/request'
 
 export default {
   filters: {
-    statusFilter (status) {
+    statusFilter(status) {
       const statusMap = {
         published: 'success',
         draft: 'gray',
@@ -145,7 +109,7 @@ export default {
       return statusMap[status]
     }
   },
-  data () {
+  data() {
     return {
       list: null,
       total: null,
@@ -153,7 +117,8 @@ export default {
       btnLoading: false,
       listQuery: {
         page: 1,
-        limit: 10
+        limit: 10,
+        search:''
       },
 
       dialogFormVisible: false,
@@ -173,11 +138,13 @@ export default {
       },
       rules: {
         create: {
-          username: [{ required: true, message: '用户名不能为空', trigger: 'change' }],
-          password: [{ required: true, message: '密码不能为空', trigger: 'change' }]
+          nickname:[{required:true,message:'名称不能为空'}],
+          username: [{ required: true, message: '登录账号不能为空', trigger: 'change' }],
+          password: [{ required: true, message: '登录密码不能为空', trigger: 'change' }]
         },
         update: {
-          username: [{ required: true, message: '用户名不能为空', trigger: 'change' }]
+          nickname:[{required:true,message:'名称不能为空'}],
+          username: [{ required: true, message: '登录账号不能为空', trigger: 'change' }]
         }
       },
       //角色复选框
@@ -192,13 +159,13 @@ export default {
       btnLoading: false,
     }
   },
-  created () {
+  created() {
     this.getList();
-    this.getRoleAll();
+    // this.getRoleAll();
     this.getPermissionAll();
   },
   methods: {
-    getList () {
+    getList() {
       this.listLoading = true
       request({
         url: '/api/backend/admin/list',
@@ -210,7 +177,7 @@ export default {
         this.listLoading = false
       })
     },
-    getRoleAll () {
+    getRoleAll() {
       request({
         url: '/api/backend/role/all',
         method: 'get',
@@ -219,7 +186,7 @@ export default {
         this.allRoles = response.data
       })
     },
-    getPermissionAll () {
+    getPermissionAll() {
       request({
         url: '/api/backend/permission/all',
         method: 'get',
@@ -228,19 +195,19 @@ export default {
         this.allPermissions = response.data
       })
     },
-    handleFilter () {
+    search(){
       this.listQuery.page = 1
       this.getList()
     },
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       this.listQuery.limit = val
       this.getList()
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.listQuery.page = val
       this.getList()
     },
-    resetForm () {
+    resetForm() {
       this.form = {
         id: '',
         username: '',
@@ -248,14 +215,14 @@ export default {
         roles: [],
         permissions: [],
       },
-        this.btnLoading = false
+      this.btnLoading = false
       this.checkAllRoles = false
       this.isIndeterminateRoles = false
       this.checkAllPermissions = false
       this.isIndeterminatePermissions = false
     },
 
-    handleCreate () {
+    handleCreate() {
       this.resetForm()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
@@ -263,21 +230,21 @@ export default {
         this.$refs['form'].clearValidate()
       })
     },
-    handleUpdate (row) {
+    handleUpdate(row) {
       this.resetForm()
       let form = Object.assign({}, row) // copy obj
-      let roles = [];
+      // let roles = [];
       let permissions = [];
-      for (let i = 0; i < form.roles.length; i++) {
-        roles.push(form.roles[i].id);
-      }
-      for (let i = 0; i < form.permissions.length; i++) {
+      // for(let i = 0; i<form.roles.length; i++) {
+      //   roles.push(form.roles[i].id);
+      // }
+      for(let i = 0; i<form.permissions.length; i++) {
         permissions.push(form.permissions[i].id);
       }
-      this.handleCheckedRolesChange(form.roles)
+      // this.handleCheckedRolesChange(form.roles)
       this.handleCheckedPermissionsChange(form.permissions)
       form.permissions = permissions
-      form.roles = roles
+      // form.roles = roles
       this.form = form
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
@@ -285,7 +252,7 @@ export default {
         this.$refs['form'].clearValidate()
       })
     },
-    saveData () {
+    saveData() {
       this.$refs['form'].validate((valid) => {
         if (valid) {
           this.btnLoading = true
@@ -306,10 +273,12 @@ export default {
           }).catch((err) => {
             this.btnLoading = false
           })
+        }else{
+          return false
         }
       })
     },
-    handleDel (val) {
+    handleDel(val) {
       this.$confirm('此操作将删除该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -317,9 +286,9 @@ export default {
       }).then(() => {
         request({
           url: '/api/backend/admin/del',
-          method: 'get',
-          params: { id: val }
-        }).then(() => {
+          method: 'post',
+          params: {id: val}
+        }).then(()=>{
           this.getList()
           this.$message({
             type: 'success',
@@ -333,32 +302,32 @@ export default {
         });
       });
     },
-    handleCheckAllRolesChange (val) {
+    handleCheckAllRolesChange(val) {
       let checkedRoles = [];
       if (val) {
-        for (let i = 0; i < this.allRoles.length; i++) {
+        for(let i = 0; i < this.allRoles.length; i++) {
           checkedRoles.push(this.allRoles[i].id);
         }
       }
       this.form.roles = checkedRoles;
       this.isIndeterminateRoles = false;
     },
-    handleCheckedRolesChange (value) {
+    handleCheckedRolesChange(value) {
       let checkedCount = value.length;
       this.checkAllRoles = checkedCount === this.allRoles.length;
       this.isIndeterminateRoles = checkedCount > 0 && checkedCount < this.allRoles.length;
     },
-    handleCheckAllPermissionsChange (val) {
+    handleCheckAllPermissionsChange(val) {
       let checkedPermissions = [];
       if (val) {
-        for (let i = 0; i < this.allPermissions.length; i++) {
+        for(let i = 0; i < this.allPermissions.length; i++) {
           checkedPermissions.push(this.allPermissions[i].id);
         }
       }
       this.form.permissions = checkedPermissions;
       this.isIndeterminatePermissions = false;
     },
-    handleCheckedPermissionsChange (value) {
+    handleCheckedPermissionsChange(value) {
       let checkedCount = value.length;
       this.checkAllPermissions = checkedCount === this.allPermissions.length;
       this.isIndeterminatePermissions = checkedCount > 0 && checkedCount < this.allPermissions.length;
@@ -369,8 +338,8 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .user-avatar {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border-radius: 6px;
 }
 </style>

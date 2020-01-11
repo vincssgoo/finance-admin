@@ -2,6 +2,7 @@
   <div class="app-container">
     <div style="margin-bottom:15px;">
       <el-button type="primary"
+      v-if="routerName !== 'ProjReturn'"
                  @click="goNew">新建</el-button>
     </div>
     <el-table v-loading="listLoading"
@@ -69,10 +70,22 @@
       </el-table-column>
 
     </el-table>
+    <div style="margin-top:15px;">
+      <el-pagination
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="listQuery.page"
+        :page-sizes="[5, 10, 20, 50,100]"
+        :page-size="listQuery.limit"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      ></el-pagination>
+    </div>
     <!-- <router-view /> -->
     <div style="text-align:center;margin-top:60px;">
       <el-button style="margin-right:15px"
                  @click="backIndex"
+                 v-if="routerName !== 'ProjReturn'"
                  type="primary">返 回</el-button>
     </div>
   </div>
@@ -85,29 +98,33 @@ export default {
   data () {
     return {
       listQuery: {
+        page:1,
+        limit:10,
         project_id: '',
       },
+      total:null,
       btnLoading: false,
       listLoading: true,
       list: null,
+      routerName:'',
     }
   },
   created () {
-    console.log(this.$route.query.project_id);
-
-    this.listQuery.project_id = this.$route.query.project_id
+    this.routerName = this.$route.name
+    console.log(this.routerName)
+    this.listQuery.project_id = this.$route.query.project_id ? this.$route.query.project_id : ''
     this.getList()
   },
   methods: {
     handleEdit (row) {
-      this.$router.replace({
+      this.$router.push({
         path: '/projectMan/newRecord',
-        query: { id: row.id }
+        query: { project_id: row.project_id,id: row.id}
       })
     },
     goNew () {
-      this.$router.replace({        path: '/projectMan/newRecord', query: {
-          project_id: this.listQuery.project_id
+      this.$router.push({        path: '/projectMan/newRecord', query: {
+          project_id: row.project_id,
         }      })
     },
     getList () {
@@ -117,22 +134,22 @@ export default {
         method: "get",
         params: this.listQuery
       }).then(response => {
-        // console.log(response);
-
         this.list = response.data.data;
+        this.total = response.data.total
         this.listLoading = false;
-        console.log(this.list);
-
-        // console.log(this.list);
-        // this.listQuery.sale_status = ''
       });
     },
     backIndex () {
-      this.$router.replace({ path: '/projectMan/list' })
+      this.$router.replace({ path: '/projectMan/list?' })
     },
-
-
-
+    handleSizeChange (val) {
+      this.listQuery.limit = val;
+      this.getList();
+    },
+    handleCurrentChange (val) {
+      this.listQuery.page = val;
+      this.getList();
+    },
   },
   components: {
     // UploadList

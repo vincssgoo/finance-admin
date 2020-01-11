@@ -63,7 +63,7 @@
       <el-table-column align="center"
                        label="时间">
         <template slot-scope="scope">
-          {{ scope.row.settle_date }}
+          {{ scope.row.start_date+'~'+scope.row.end_date }}
         </template>
       </el-table-column>
       <el-table-column align="center"
@@ -71,12 +71,11 @@
                        width="160">
         <template slot-scope="scope">
 
-          <div v-if="scope.row.admin.length==0"
-               style="color:red">
-            未对账
+          <div v-if="scope.row.admin">
+            <el-tag type="success">{{ scope.row.admin.nickname }}</el-tag>
           </div>
           <div v-else>
-            {{ scope.row.admin.nickname }}
+            <el-tag type="danger">未对账</el-tag>
           </div>
         </template>
       </el-table-column>
@@ -88,7 +87,7 @@
                   style="">
           <div>
 
-            <div v-if="scope.row.admin.length==0"
+            <div v-if="!scope.row.admin"
                  style="color:red">
               <el-button @click="handleEdit(scope.row)"
                          type="primary">对账</el-button>
@@ -130,6 +129,7 @@ export default {
         no: '',
         type_id: '',
       },
+      total:null,
       btnLoading: false,
       listLoading: true,
       list: null,
@@ -151,31 +151,29 @@ export default {
       this.listQuery.page = 1;
       this.getList();
     },
-    // handleEdit (row) {
-    //   this.$confirm('确定要进行对账操作吗?', {
-    //     confirmButtonText: '确定',
-    //     cancelButtonText: '取消',
-    //   }).then(() => {
-    //     this.changeStatus(row)
-    //   }).catch(() => {
+    handleEdit (row) {
+      this.$confirm('确定要进行对账操作吗?', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+      }).then(() => {
+        this.changeStatus(row)
+      }).catch(() => {
 
-    //   });
-    // },
-    // changeStatus (row) {
-    //   request({
-    //     url: "/api/backend/moneySettle/handle",
-    //     method: "post",
-    //     data: { id: row.id }
-    //   }).then(response => {
-    //     if (row.status == '1') {
-    //       row.status = '2'
-    //     }
-    //     else if (row.status == '2') {
-    //       row.status = '1'
-    //     }
-    //     this.getList()
-    //   });
-    // },
+      });
+    },
+    changeStatus (row) {
+      request({
+        url: "/api/backend/moneySettle/handle",
+        method: "post",
+        data: { id: row.id }
+      }).then(response => {
+        this.$message({
+          type: 'success',
+          message: '对账成功!'
+        });
+        this.getList()
+      });
+    },
     getList () {
       this.listLoading = true;
       request({

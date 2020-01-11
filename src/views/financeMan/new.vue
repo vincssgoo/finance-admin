@@ -11,7 +11,7 @@
         ></el-input>
       </el-form-item>
       <el-form-item label="收入时间">
-        <el-date-picker type="datetime" placeholder="选择日期时间" v-model="form.income_datetime"></el-date-picker>
+        <el-date-picker type="datetime" placeholder="选择日期时间"  v-model="form.income_datetime"></el-date-picker>
       </el-form-item>
       <el-form-item label="收入金额">
         <el-input placeholder="请输入金额" style="width:30%" v-model="form.price" clearable/>
@@ -129,13 +129,13 @@ export default {
     },
     saveData() {
       if (this.form.income_datetime) {
-        this.form.income_datetime = moment(this.form.income_datetime).format("YYYY-M-DD h:mm:ss");
+        this.form.income_datetime = moment(this.form.income_datetime).format("YYYY-MM-DD HH:mm:ss");
       }
       if(!this.form.income_datetime || !this.form.desc || !this.form.price || !this.form.type_id) {
         this.$message({
-            type: "error",
-            message: "请填写完整!"
-          });
+          type: "error",
+          message: "请填写完整!"
+        });
         return
       }
       this.btnLoading = true;

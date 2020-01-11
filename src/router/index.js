@@ -90,6 +90,13 @@ export const asyncRouterMap = [{
         meta: {
           title: '财务收入',
         }
+      },{
+        path: 'outcome',
+        name: 'Outcome',
+        component: () => import('@/views/financeMan/outcome'),
+        meta: {
+          title: '财务支出',
+        }
       },
       {
         path: 'proof',
@@ -136,23 +143,8 @@ export const asyncRouterMap = [{
         },
         hidden: true
       },
-      {
-        path: 'log',
-        name: 'Log',
-        component: () => import('@/views/financeMan/log'),
-        meta: {
-          title: '收入操作日志',
-        },
-      },
 
-      {
-        path: 'outcome',
-        name: 'Outcome',
-        component: () => import('@/views/financeMan/outcome'),
-        meta: {
-          title: '财务支出',
-        }
-      }, {
+       {
         path: 'incomeMan',
         name: 'IncomeMan',
         component: () => import('@/views/financeMan/incomeMan'),
@@ -168,10 +160,18 @@ export const asyncRouterMap = [{
           title: '支出类型管理',
         },
         // hidden: true
-      }, {
+      },
+      {
+        path: 'incomeLog',
+        name: 'incomeLog',
+        component: () => import('@/views/reimbursementMan/log'),
+        meta: {
+          title: '收入操作日志',
+        },
+      },{
         path: 'logOut',
         name: 'LogOut',
-        component: () => import('@/views/financeMan/logOut'),
+        component: () => import('@/views/reimbursementMan/log'),
         meta: {
           title: '支出操作日志',
         },
@@ -300,7 +300,7 @@ export const asyncRouterMap = [{
       }, {
         path: 'projReturn',
         name: 'ProjReturn',
-        component: () => import('@/views/projectMan/projReturn'),
+        component: () => import('@/views/projectMan/record'),
         meta: {
           title: '项目回款',
         },

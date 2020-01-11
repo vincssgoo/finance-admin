@@ -28,10 +28,6 @@
       <el-form-item label="支出类型">
         <el-select placeholder="请选择类型"
                    v-model="form.type_id">
-          <!-- <el-option v-for="item in list_type"
-                     :label="item.name"
-                     :value="item.id">
-          </el-option> -->
           <el-option v-for="item in typeList"
                      :label="item.title"
                      :value="item.id">
@@ -147,7 +143,7 @@ export default {
     },
     saveData () {
       if (this.form.pay_datetime) {
-        this.form.pay_datetime = moment(this.form.pay_datetime).format('YYYY-M-DD h:mm:ss')
+        this.form.pay_datetime = moment(this.form.pay_datetime).format('YYYY-MM-DD HH:mm:ss')
       }
       if(!this.form.pay_datetime || !this.form.desc || !this.form.price || !this.form.type_id || !this.form.create_user) {
         this.$message({

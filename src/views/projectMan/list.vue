@@ -254,12 +254,12 @@ export default {
   },
   methods: {
     goRecord (row) {
-      this.$router.replace({        path: '/projectMan/record', query: {
+      this.$router.push({        path: '/projectMan/record', query: {
           project_id: row.id
         }      })
     },
     goNew () {
-      this.$router.replace({ path: '/projectMan/modify' })
+      this.$router.push({ path: '/projectMan/modify' })
     },
     getTypeList () {
       this.listLoading = true;

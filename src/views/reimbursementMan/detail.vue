@@ -29,8 +29,7 @@
       </el-form-item>
       <el-form-item label="支出类型">
         <el-select placeholder="请选择类型"
-                   v-model="form.type_id"
-                   disabled>
+                   v-model="form.type_id">
           <el-option v-for="item in typeList"
                      :label="item.title"
                      :value="item.id">
@@ -97,6 +96,9 @@ export default {
         content: '',
         applicant: '',
       },
+      typeQuery:{
+        status:1
+      },
       btnLoading: false,
       listLoading: true,
       list: null,
@@ -112,22 +114,15 @@ export default {
     //   this.getDetail()
     // }
     // this.getLocationList();
-    // this.getTypeList();
     if (this.$route.query.id) {
       this.form.id = this.$route.query.id
       this.getList()
-      this.getTypeList()
     }
     if (this.bxList == null || this.proofList == null) {
       this.bxList = []
       this.proofList = []
     }
-
-
-
-    // console.log(this.proofList);
-
-    // this.getSchoolList();
+    this.getTypeList();
   },
   methods: {
     getTypeList () {
@@ -135,6 +130,7 @@ export default {
       request({
         url: "/api/backend/payType/index",
         method: "get",
+        params: this.typeQuery,
       }).then(response => {
         this.length = response.data.length
         this.typeList = response.data.data;
