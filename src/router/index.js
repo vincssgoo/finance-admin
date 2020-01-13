@@ -50,6 +50,16 @@ export const constantRouterMap = [{
       component: () => import('@/views/dashboard')
     }]
   },
+  {
+    path: '',
+    component: Layout,
+    name: 'Info',
+    hidden: true,
+    children: [{
+      path: '/info',
+      component: () => import('@/views/info/index')
+    }]
+  },
 
 
 ]
