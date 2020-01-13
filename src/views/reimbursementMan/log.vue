@@ -67,9 +67,9 @@
               <span style="margin-left:30px;color:red;" v-if="item.data_after.create_user">变更后：</span>
               <span class="span_width" style="margin-left:20px;color:red;" v-if="item.data_after.create_user">{{item.data_after.create_user}}</span>
             </div>
-            <div class="income_handle" v-if="item.data_before.content">
+            <div class="income_handle" v-if="item.data_before.content == null || item.data_before.content">
               <span>{{item.group == 1 ? '收入' : item.group == 2 ? '支出' : '报销'}}备注：</span>
-              <span class="span_width" style="margin-left:20px;">{{item.data_before.content}}</span>
+              <span class="span_width" style="margin-left:20px;">{{item.data_before.content ? item.data_before.content : ''}}</span>
               <span style="margin-left:30px;color:red;" v-if="item.data_after.content">变更后：</span>
               <span class="span_width" style="margin-left:20px;color:red;" v-if="item.data_after.content">{{item.data_after.content}}</span>
             </div>
