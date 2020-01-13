@@ -79,13 +79,27 @@
                        label="对账人"
                        width="160">
         <template slot-scope="scope">
-
-          <div v-if="scope.row.admin">
-            <el-tag type="success">{{ scope.row.admin.nickname }}</el-tag>
-          </div>
-          <div v-else>
+          <div v-if="scope.row.admins.length == 0">
             <el-tag type="danger">未对账</el-tag>
           </div>
+          <div v-else  v-for="item in scope.row.admins" :key="item.id">
+            <el-tag type="success" style="margin-bottom:5px;">{{ item.nickname }}</el-tag>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作"
+                       width="150"
+                       align="center">
+        <template slot-scope="scope"
+                  style="">
+          <div>
+
+            <div >
+              <el-button @click="reconciliation(scope.row.id)"
+                         type="primary">对账</el-button>
+            </div>
+          </div>
+
         </template>
       </el-table-column>
 
@@ -181,21 +195,21 @@ export default {
       this.listQuery.page = 1;
       this.getList();
     },
-    handleEdit (row) {
+    reconciliation(id) {
       this.$confirm('确定要进行对账操作吗?', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
       }).then(() => {
-        this.changeStatus(row)
+        this.changeStatus(id)
       }).catch(() => {
 
       });
     },
-    changeStatus (row) {
+    changeStatus (id) {
       request({
-        url: "/api/backend/moneySettle/handle",
+        url: "/api/backend/moneySettle/handleOthers",
         method: "post",
-        data: { id: row.id }
+        data: { id: id }
       }).then(response => {
         this.$message({
           type: 'success',
