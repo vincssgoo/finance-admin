@@ -84,21 +84,6 @@ export const asyncRouterMap = [{
         },
       },
       {
-        path: 'income',
-        name: 'Income',
-        component: () => import('@/views/financeMan/income'),
-        meta: {
-          title: '财务收入',
-        }
-      },{
-        path: 'outcome',
-        name: 'Outcome',
-        component: () => import('@/views/financeMan/outcome'),
-        meta: {
-          title: '财务支出',
-        }
-      },
-      {
         path: 'proof',
         name: 'Proof',
         component: () => import('@/views/financeMan/proof'),
@@ -143,24 +128,30 @@ export const asyncRouterMap = [{
         },
         hidden: true
       },
-
-       {
-        path: 'incomeMan',
-        name: 'IncomeMan',
-        component: () => import('@/views/financeMan/incomeMan'),
+    ]
+  },{
+    path: '',
+    component: Layout,
+    alwaysShow: true,
+    name: 'incomeManagement',
+    meta: { title: '财政收入管理', permissions: ['admin','role'], icon: 'tree' },
+    children: [
+      {
+        path: 'income',
+        name: 'Income',
+        component: () => import('@/views/financeMan/income'),
         meta: {
-          title: '收入类型管理',
-        },
-        // hidden: true
-      }, {
-        path: 'outcomeMan',
-        name: 'OutcomeMan',
-        component: () => import('@/views/financeMan/outcomeMan'),
-        meta: {
-          title: '支出类型管理',
-        },
-        // hidden: true
-      },
+          title: '财务收入',
+        }
+      },{
+       path: 'incomeMan',
+       name: 'IncomeMan',
+       component: () => import('@/views/financeMan/incomeMan'),
+       meta: {
+         title: '收入类型管理',
+       },
+       // hidden: true
+     },
       {
         path: 'incomeLog',
         name: 'incomeLog',
@@ -168,6 +159,30 @@ export const asyncRouterMap = [{
         meta: {
           title: '收入操作日志',
         },
+      },
+    ]
+  },{
+    path: '',
+    component: Layout,
+    alwaysShow: true,
+    name: 'outcomeManagement',
+    meta: { title: '财政支出管理', permissions: ['admin','role'], icon: 'tree' },
+    children: [
+      {
+        path: 'outcome',
+        name: 'Outcome',
+        component: () => import('@/views/financeMan/outcome'),
+        meta: {
+          title: '财务支出',
+        }
+      },{
+        path: 'outcomeMan',
+        name: 'OutcomeMan',
+        component: () => import('@/views/financeMan/outcomeMan'),
+        meta: {
+          title: '支出类型管理',
+        },
+        // hidden: true
       },{
         path: 'logOut',
         name: 'LogOut',

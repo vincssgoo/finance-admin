@@ -6,13 +6,13 @@
       <span style="margin-left:40px;">签约时间</span>
       <el-date-picker style="margin-left:20px;width: 150px;"
                       type="date"
-                      v-model="listQuery.start_datetime"
+                      v-model="listQuery.sign_start_datetime"
                       placeholder="开始日期时间"
                       value-format="yyyy-MM-dd"></el-date-picker>
       至
       <el-date-picker style="width: 150px;"
                       type="date"
-                      v-model="listQuery.end_datetime"
+                      v-model="listQuery.sign_end_datetime"
                       placeholder="结束日期时间"
                       value-format="yyyy-MM-dd">
       </el-date-picker>

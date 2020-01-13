@@ -138,6 +138,7 @@ export default {
         });
         return
       }
+      this.form.expense_proof = []
       this.btnLoading = true;
       request({
         url: "/api/backend/income/store",

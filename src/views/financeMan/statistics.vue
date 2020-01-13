@@ -111,6 +111,8 @@ export default {
         this.myChart4 = echarts.init(document.getElementById('myChart4'))
         this.lineData[3] = res.data.pay_percent;
         this.lineData[5] = res.data.pay_type
+        console.log(this.lineData[4])
+        console.log(this.lineData[5])
         this.myChart2.setOption({
           title: {
             text:'收入详情',
@@ -122,10 +124,10 @@ export default {
             formatter: '{a} <br/>{b} : {c} ({d}%)'
           },
           legend: {
-              orient: 'vertical',
-              left: 'left',
-              data: this.lineData[4]
-            },
+            orient: 'vertical',
+            left: 'left',
+            data: this.lineData[4]
+          },
           series: [
             {
               name: '收入来源',
@@ -135,10 +137,10 @@ export default {
               data:this.lineData[1].sort(function (a, b) { return a.value - b.value; }),
               emphasis: {
                 itemStyle: {
-                  color: '#c23531',
-                  shadowBlur: 200,
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
                   shadowColor: 'rgba(0, 0, 0, 0.5)'
-                },
+                }
               }
             }
           ]
@@ -167,10 +169,10 @@ export default {
                 data:this.lineData[3],
                 emphasis: {
                   itemStyle: {
-                    color: '#c23531',
-                    shadowBlur: 200,
-                    shadowColor: 'rgba(0, 0, 0, 0.5)'
-                  },
+                  shadowBlur: 10,
+                  shadowOffsetX: 0,
+                  shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
                 }
               }
             ]

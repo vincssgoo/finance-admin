@@ -5,21 +5,6 @@
       <span style="margin-left:40px;">签约时间</span>
       <el-date-picker
         style="margin-left:20px;width: 150px;"
-        v-model="listQuery.start_datetime"
-        type="date"
-        placeholder="开始日期时间"
-        value-format="yyyy-MM-dd"
-      ></el-date-picker>至
-      <el-date-picker
-        style="width: 150px;"
-        v-model="listQuery.end_datetime"
-        type="date"
-        placeholder="结束日期时间"
-        value-format="yyyy-MM-dd"
-      ></el-date-picker>
-      <span style="margin-left:40px;">录入时间</span>
-      <el-date-picker
-        style="margin-left:20px;width: 150px;"
         v-model="listQuery.income_start_datetime"
         type="date"
         placeholder="开始日期时间"
@@ -28,6 +13,21 @@
       <el-date-picker
         style="width: 150px;"
         v-model="listQuery.income_end_datetime"
+        type="date"
+        placeholder="结束日期时间"
+        value-format="yyyy-MM-dd"
+      ></el-date-picker>
+      <span style="margin-left:40px;">录入时间</span>
+      <el-date-picker
+        style="margin-left:20px;width: 150px;"
+        v-model="listQuery.start_datetime"
+        type="date"
+        placeholder="开始日期时间"
+        value-format="yyyy-MM-dd"
+      ></el-date-picker>至
+      <el-date-picker
+        style="width: 150px;"
+        v-model="listQuery.end_datetime"
         type="date"
         placeholder="结束日期时间"
         value-format="yyyy-MM-dd"

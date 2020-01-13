@@ -5,19 +5,6 @@
                  @click="goNew">新建</el-button>
       <span style="margin-left:40px;">签约时间</span>
       <el-date-picker style="margin-left:20px;width: 150px;"
-                      v-model="listQuery.start_datetime"
-                      type="date"
-                      placeholder="开始日期时间"
-                      value-format="yyyy-MM-dd"></el-date-picker>
-      至
-      <el-date-picker style="width: 150px;"
-                      v-model="listQuery.end_datetime"
-                      type="date"
-                      placeholder="结束日期时间"
-                      value-format="yyyy-MM-dd">
-      </el-date-picker>
-      <span style="margin-left:40px;">录入时间</span>
-      <el-date-picker style="margin-left:20px;width: 150px;"
                       v-model="listQuery.pay_start_datetime"
                       type="date"
                       placeholder="开始日期时间"
@@ -25,6 +12,19 @@
       至
       <el-date-picker style="width: 150px;"
                       v-model="listQuery.pay_end_datetime"
+                      type="date"
+                      placeholder="结束日期时间"
+                      value-format="yyyy-MM-dd">
+      </el-date-picker>
+      <span style="margin-left:40px;">录入时间</span>
+      <el-date-picker style="margin-left:20px;width: 150px;"
+                      v-model="listQuery.start_datetime"
+                      type="date"
+                      placeholder="开始日期时间"
+                      value-format="yyyy-MM-dd"></el-date-picker>
+      至
+      <el-date-picker style="width: 150px;"
+                      v-model="listQuery.end_datetime"
                       type="date"
                       placeholder="结束日期时间"
                       value-format="yyyy-MM-dd">
@@ -139,14 +139,14 @@
                        label="是否已上传报销凭证"
                        width="165">
         <template slot-scope="scope">
-          <div v-if="scope.row.expense_proof&&scope.row.is_expense == 1">
+          <div v-if="scope.row.expense_proof.length > 0&&scope.row.is_expense == 1">
             已上传
           </div>
-          <div v-if="(!scope.row.expense_proof || scope.row.expense_proof.length==0)&&scope.row.is_expense == 1"
+          <div v-if="scope.row.expense_proof.length==0&&scope.row.is_expense == 1"
                style="color:red">
             未上传
           </div>
-          <div v-if="(!scope.row.expense_proof || scope.row.expense_proof.length==0)&&scope.row.is_expense != 1"
+          <div v-if="scope.row.is_expense != 1"
                style="color:#000">
             -----
           </div>
