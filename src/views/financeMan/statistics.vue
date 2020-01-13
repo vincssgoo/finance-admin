@@ -16,7 +16,7 @@
       <el-button type="success" @click="searcher">搜索</el-button>
       <div style="margin-top:20px;">
         <span style="margin-right:50px;">总收入：{{income_sum}}</span>
-        <span>总收入：{{pay_sum}}</span>
+        <span>总支出：{{pay_sum}}</span>
       </div>
     </div>
     <!-- 折线图 -->
