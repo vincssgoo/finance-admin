@@ -73,7 +73,8 @@ export const asyncRouterMap = [{
     name: 'financeMan',
     meta: {
       title: '财务管理',
-      icon: 'caiwu'
+      icon: 'caiwu',
+      permissions: ['admin', 'role', 'finance'],
     },
     children: [{
         path: 'statistics',
@@ -129,29 +130,32 @@ export const asyncRouterMap = [{
         hidden: true
       },
     ]
-  },{
+  }, {
     path: '',
     component: Layout,
     alwaysShow: true,
     name: 'incomeManagement',
-    meta: { title: '财政收入管理', permissions: ['admin','role'], icon: 'tree' },
-    children: [
-      {
+    meta: {
+      title: '财政收入管理',
+      permissions: ['admin', 'role', 'finance'],
+      icon: 'tree'
+    },
+    children: [{
         path: 'income',
         name: 'Income',
         component: () => import('@/views/financeMan/income'),
         meta: {
           title: '财务收入',
         }
-      },{
-       path: 'incomeMan',
-       name: 'IncomeMan',
-       component: () => import('@/views/financeMan/incomeMan'),
-       meta: {
-         title: '收入类型管理',
-       },
-       // hidden: true
-     },
+      }, {
+        path: 'incomeMan',
+        name: 'IncomeMan',
+        component: () => import('@/views/financeMan/incomeMan'),
+        meta: {
+          title: '收入类型管理',
+        },
+        // hidden: true
+      },
       {
         path: 'incomeLog',
         name: 'incomeLog',
@@ -161,38 +165,40 @@ export const asyncRouterMap = [{
         },
       },
     ]
-  },{
+  }, {
     path: '',
     component: Layout,
     alwaysShow: true,
     name: 'outcomeManagement',
-    meta: { title: '财政支出管理', permissions: ['admin','role'], icon: 'tree' },
-    children: [
-      {
-        path: 'outcome',
-        name: 'Outcome',
-        component: () => import('@/views/financeMan/outcome'),
-        meta: {
-          title: '财务支出',
-        }
-      },{
-        path: 'outcomeMan',
-        name: 'OutcomeMan',
-        component: () => import('@/views/financeMan/outcomeMan'),
-        meta: {
-          title: '支出类型管理',
-        },
-        // hidden: true
-      },{
-        path: 'logOut',
-        name: 'LogOut',
-        component: () => import('@/views/reimbursementMan/log'),
-        meta: {
-          title: '支出操作日志',
-        },
-        // hidden: true
+    meta: {
+      title: '财政支出管理',
+      permissions: ['admin', 'role', 'finance'],
+      icon: 'tree'
+    },
+    children: [{
+      path: 'outcome',
+      name: 'Outcome',
+      component: () => import('@/views/financeMan/outcome'),
+      meta: {
+        title: '财务支出',
+      }
+    }, {
+      path: 'outcomeMan',
+      name: 'OutcomeMan',
+      component: () => import('@/views/financeMan/outcomeMan'),
+      meta: {
+        title: '支出类型管理',
       },
-    ]
+      // hidden: true
+    }, {
+      path: 'logOut',
+      name: 'LogOut',
+      component: () => import('@/views/reimbursementMan/log'),
+      meta: {
+        title: '支出操作日志',
+      },
+      // hidden: true
+    }, ]
   },
   {
     path: '/reimbursementMan',
@@ -202,7 +208,8 @@ export const asyncRouterMap = [{
     name: 'reimbursementMan',
     meta: {
       title: '报销管理',
-      icon: 'baoxiao'
+      icon: 'baoxiao',
+      permissions: ['admin', 'role', 'expense'],
     },
     children: [{
         path: 'list',
@@ -248,7 +255,8 @@ export const asyncRouterMap = [{
     name: 'ReconciliationMan',
     meta: {
       title: '对账管理',
-      icon: 'zhangben'
+      icon: 'zhangben',
+      permissions: ['admin', 'role', 'settle'],
     },
     children: [{
         path: 'profitLoss',
@@ -269,7 +277,8 @@ export const asyncRouterMap = [{
     name: 'projectMan',
     meta: {
       title: '项目管理',
-      icon: 'xiangmu'
+      icon: 'xiangmu',
+      permissions: ['admin', 'role', 'project'],
     },
     children: [{
         path: 'list',
@@ -315,7 +324,7 @@ export const asyncRouterMap = [{
       }, {
         path: 'projReturn',
         name: 'ProjReturn',
-        component: () => import('@/views/projectMan/record'),
+        component: () => import('@/views/projectMan/projReturn'),
         meta: {
           title: '项目回款',
         },

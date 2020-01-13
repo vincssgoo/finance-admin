@@ -49,7 +49,8 @@ export default {
   methods: {
 
     backIndex () {
-      this.$router.push({ path: '/financeMan/outcome' })
+      // this.$router.push({ path: '/outcome' })
+      this.$router.back(-1)
     },
     getList () {
       this.listLoading = true;

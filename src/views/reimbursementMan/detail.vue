@@ -96,8 +96,8 @@ export default {
         content: '',
         applicant: '',
       },
-      typeQuery:{
-        status:1
+      typeQuery: {
+        status: 1
       },
       btnLoading: false,
       listLoading: true,
@@ -191,7 +191,8 @@ export default {
         });
     },
     backIndex () {
-      this.$router.push({ path: '/reimbursementMan/list' })
+      // this.$router.push({ path: '/reimbursementMan/list' })
+      this.$router.back(-1)
     },
 
 

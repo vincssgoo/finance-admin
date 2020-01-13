@@ -41,7 +41,8 @@
       </el-select>
       <el-select v-model="listQuery.type_id"
                  placeholder="类型"
-                 style="">
+                 style=""
+                 clearable>
         <el-option v-for="item in typeList"
                    :label="item.title"
                    :value="item.id">
@@ -50,19 +51,19 @@
 
       <div style="margin-top:10px;">
         <el-input placeholder="公司名称"
-                v-model="listQuery.company_name"
-                style="width: 150px;"
-                clearable>
-      </el-input>
-      <el-input placeholder="项目名称"
-                v-model="listQuery.project_name"
-                style="width: 150px;"
-                clearable>
-      </el-input>
-      <el-button type="primary"
-                 plain
-                 icon="el-icon-search"
-                 @click="handleFilter(value)">搜索</el-button>
+                  v-model="listQuery.company_name"
+                  style="width: 150px;"
+                  clearable>
+        </el-input>
+        <el-input placeholder="项目名称"
+                  v-model="listQuery.project_name"
+                  style="width: 150px;"
+                  clearable>
+        </el-input>
+        <el-button type="primary"
+                   plain
+                   icon="el-icon-search"
+                   @click="handleFilter(value)">搜索</el-button>
       </div>
 
     </div>
@@ -150,9 +151,12 @@
                        label="状态"
                        width="95">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.returned_percent == 0 " type="primary">新建</el-tag>
-          <el-tag v-if="scope.row.returned_percent > 0 && scope.row.returned_percent < 100" type="success">进行中</el-tag>
-          <el-tag v-if="scope.row.returned_percent == 100" type="danger">已完成</el-tag>
+          <el-tag v-if="scope.row.returned_percent == 0 "
+                  type="primary">新建</el-tag>
+          <el-tag v-if="scope.row.returned_percent > 0 && scope.row.returned_percent < 100"
+                  type="success">进行中</el-tag>
+          <el-tag v-if="scope.row.returned_percent == 100"
+                  type="danger">已完成</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center"
@@ -185,11 +189,14 @@
         <template slot-scope="scope"
                   style="">
           <div>
-            <el-button class="btns" @click="handleEdit(scope.row)"
+            <el-button class="btns"
+                       @click="handleEdit(scope.row)"
                        type="warning">修改</el-button>
-            <el-button class="btns" @click="handleDelete(scope.row)"
-            type="danger">删除</el-button>
-            <el-button class="btns" @click="goRecord(scope.row)"
+            <el-button class="btns"
+                       @click="handleDelete(scope.row)"
+                       type="danger">删除</el-button>
+            <el-button class="btns"
+                       @click="goRecord(scope.row)"
                        type="primary">回款记录</el-button>
           </div>
 
@@ -323,7 +330,7 @@ export default {
     getList () {
       this.listQuery.start_datetime = this.listQuery.start_datetime ? this.listQuery.start_datetime + " 00:00:00" : ""
       this.listQuery.end_datetime = this.listQuery.end_datetime ? this.listQuery.end_datetime + " 23:59:59" : ""
-      this.listQuery.income_start_datetime = this.listQuery.income_start_datetime ? this.listQuery.income_start_datetime + " 23:59:59" : ""
+      this.listQuery.income_start_datetime = this.listQuery.income_start_datetime ? this.listQuery.income_start_datetime + " 00:00:00" : ""
       this.listQuery.income_end_datetime = this.listQuery.income_end_datetime ? this.listQuery.income_end_datetime + " 23:59:59" : ""
       this.listLoading = true;
       request({
@@ -341,7 +348,7 @@ export default {
         console.log(this.list);
       });
     },
-    handleDelete(row) {
+    handleDelete (row) {
       this.$confirm("确认删除, 是否继续?", "提示", {
         type: "warning"
       })
@@ -374,7 +381,7 @@ export default {
 }
 </script>
 <style scoped>
-  .btns {
-    margin-bottom: 5px;
-  }
+.btns {
+  margin-bottom: 5px;
+}
 </style>

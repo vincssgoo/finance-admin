@@ -139,17 +139,18 @@ export default {
       });
     },
     backIndex () {
-      this.$router.push({ path: '/financeMan/outcome' })
+      // this.$router.replace({ path: '/outcome' })
+      this.$router.back(-1)
     },
     saveData () {
       if (this.form.pay_datetime) {
         this.form.pay_datetime = moment(this.form.pay_datetime).format('YYYY-MM-DD HH:mm:ss')
       }
-      if(!this.form.pay_datetime || !this.form.desc || !this.form.price || !this.form.type_id || !this.form.create_user) {
+      if (!this.form.pay_datetime || !this.form.desc || !this.form.price || !this.form.type_id || !this.form.create_user) {
         this.$message({
-            type: "error",
-            message: "请填写完整!"
-          });
+          type: "error",
+          message: "请填写完整!"
+        });
         return
       }
       this.form.expense_proof = []

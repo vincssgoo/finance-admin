@@ -3,7 +3,7 @@
     <div style="margin-bottom:15px;">
       <el-button type="primary"
                  @click="goNew">新建</el-button>
-      <span style="margin-left:40px;">签约时间</span>
+      <span style="margin-left:40px;">支出时间</span>
       <el-date-picker style="margin-left:20px;width: 150px;"
                       v-model="listQuery.pay_start_datetime"
                       type="date"
@@ -30,31 +30,31 @@
                       value-format="yyyy-MM-dd">
       </el-date-picker>
       <div style="margin-top:20px;margin-left:100px;">
-      <el-select v-model="listQuery.type_id"
-                 placeholder="类型"
-                 style="width:120px;margin-right:20px"
-                 clearable>
-        <el-option v-for="item in typeList"
-                   :label="item.title"
-                   :value="item.id"
-                   :key="item.id">
-        </el-option>
-      </el-select>
+        <el-select v-model="listQuery.type_id"
+                   placeholder="类型"
+                   style="width:120px;margin-right:20px"
+                   clearable>
+          <el-option v-for="item in typeList"
+                     :label="item.title"
+                     :value="item.id"
+                     :key="item.id">
+          </el-option>
+        </el-select>
 
-      <el-input placeholder="收入说明"
-                v-model="listQuery.keyword"
-                style="width: 150px;margin-right:20px"
-                clearable>
-      </el-input>
-      <el-input placeholder="编号"
-                v-model="listQuery.no"
-                style="width: 150px;margin-right:20px"
-                clearable>
-      </el-input>
+        <el-input placeholder="收入说明"
+                  v-model="listQuery.keyword"
+                  style="width: 150px;margin-right:20px"
+                  clearable>
+        </el-input>
+        <el-input placeholder="编号"
+                  v-model="listQuery.no"
+                  style="width: 150px;margin-right:20px"
+                  clearable>
+        </el-input>
         <el-button type="primary"
-                 plain
-                 icon="el-icon-search"
-                 @click="handleFilter(value)">搜索</el-button>
+                   plain
+                   icon="el-icon-search"
+                   @click="handleFilter(value)">搜索</el-button>
 
       </div>
     </div>
@@ -193,7 +193,7 @@
                        type="warning"
                        @click="goProof(scope.row)">支出凭证</el-button>
             <el-button size="mini"
-                      v-if="scope.row.is_expense == 1"
+                       v-if="scope.row.is_expense == 1"
                        type="warning"
                        @click="goBxProof(scope.row)">报销凭证</el-button>
             <el-button size="mini"
@@ -313,7 +313,7 @@ export default {
     getList () {
       this.listQuery.start_datetime = this.listQuery.start_datetime ? this.listQuery.start_datetime + " 00:00:00" : ""
       this.listQuery.end_datetime = this.listQuery.end_datetime ? this.listQuery.end_datetime + " 23:59:59" : ""
-      this.listQuery.pay_start_datetime = this.listQuery.pay_start_datetime ? this.listQuery.pay_start_datetime + " 23:59:59" : ""
+      this.listQuery.pay_start_datetime = this.listQuery.pay_start_datetime ? this.listQuery.pay_start_datetime + " 00:00:00" : ""
       this.listQuery.pay_end_datetime = this.listQuery.pay_end_datetime ? this.listQuery.pay_end_datetime + " 23:59:59" : ""
       this.listLoading = true;
       request({

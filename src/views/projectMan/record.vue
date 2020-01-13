@@ -2,7 +2,7 @@
   <div class="app-container">
     <div style="margin-bottom:15px;">
       <el-button type="primary"
-      v-if="routerName !== 'ProjReturn'"
+                 v-if="routerName !== 'ProjReturn'"
                  @click="goNew">新建</el-button>
     </div>
     <el-table v-loading="listLoading"
@@ -95,15 +95,13 @@
 
     </el-table>
     <div style="margin-top:15px;">
-      <el-pagination
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-        :current-page="listQuery.page"
-        :page-sizes="[5, 10, 20, 50,100]"
-        :page-size="listQuery.limit"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-      ></el-pagination>
+      <el-pagination @size-change="handleSizeChange"
+                     @current-change="handleCurrentChange"
+                     :current-page="listQuery.page"
+                     :page-sizes="[5, 10, 20, 50,100]"
+                     :page-size="listQuery.limit"
+                     layout="total, sizes, prev, pager, next, jumper"
+                     :total="total"></el-pagination>
     </div>
     <!-- <router-view /> -->
     <div style="text-align:center;margin-top:60px;">
@@ -122,15 +120,15 @@ export default {
   data () {
     return {
       listQuery: {
-        page:1,
-        limit:10,
+        page: 1,
+        limit: 10,
         project_id: '',
       },
-      total:null,
+      total: null,
       btnLoading: false,
       listLoading: true,
       list: null,
-      routerName:'',
+      routerName: '',
     }
   },
   created () {
@@ -141,9 +139,9 @@ export default {
   watch: {
     '$route' (to, from) { //监听路由是否变化
       this.routerName = this.$route.name
-      if(this.name === 'ProjReturn'){
+      if (this.name === 'ProjReturn') {
         this.listQuery.project_id = ''
-      }else if(this.name === 'Record'){
+      } else if (this.name === 'Record') {
         this.listQuery.project_id = this.$route.query.project_id
       }
       this.getList()
@@ -153,7 +151,7 @@ export default {
     handleEdit (row) {
       this.$router.push({
         path: '/projectMan/newRecord',
-        query: { project_id: row.project_id,id: row.id}
+        query: { project_id: row.project_id, id: row.id }
       })
     },
     goNew () {

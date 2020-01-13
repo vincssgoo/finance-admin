@@ -1,46 +1,55 @@
 <template>
   <div class="app-container">
-    <el-form ref="form" :model="form" label-width="120px">
+    <el-form ref="form"
+             :model="form"
+             label-width="120px">
       <el-form-item label="收入说明">
-        <el-input
-          type="textarea"
-          :rows="3"
-          placeholder="请输入内容"
-          style="width:30%"
-          v-model="form.desc"
-        ></el-input>
+        <el-input type="textarea"
+                  :rows="3"
+                  placeholder="请输入内容"
+                  style="width:30%"
+                  v-model="form.desc"></el-input>
       </el-form-item>
       <el-form-item label="收入时间">
-        <el-date-picker type="datetime" placeholder="选择日期时间"  v-model="form.income_datetime"></el-date-picker>
+        <el-date-picker type="datetime"
+                        placeholder="选择日期时间"
+                        v-model="form.income_datetime"></el-date-picker>
       </el-form-item>
       <el-form-item label="收入金额">
-        <el-input placeholder="请输入金额" style="width:30%" v-model="form.price" clearable/>
+        <el-input placeholder="请输入金额"
+                  style="width:30%"
+                  v-model="form.price"
+                  clearable />
       </el-form-item>
       <el-form-item label="收入类型">
-        <el-select placeholder="请选择类型" v-model="form.type_id">
+        <el-select placeholder="请选择类型"
+                   v-model="form.type_id">
           <!-- <el-option v-for="item in list_type"
                      :label="item.name"
                      :value="item.id">
           </el-option>-->
-          <el-option v-for="item in typeList" :label="item.title" :value="item.id"></el-option>
+          <el-option v-for="item in typeList"
+                     :label="item.title"
+                     :value="item.id"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="备注">
-        <el-input
-          type="textarea"
-          :rows="3"
-          placeholder="请输入内容"
-          style="width:30%"
-          v-model="form.content"
-        ></el-input>
+        <el-input type="textarea"
+                  :rows="3"
+                  placeholder="请输入内容"
+                  style="width:30%"
+                  v-model="form.content"></el-input>
       </el-form-item>
       <el-form-item label="凭证">
         <UploadList v-model="form.proof"></UploadList>
       </el-form-item>
     </el-form>
     <div style="text-align:center">
-      <el-button style="margin-right:15px" @click="backIndex">返 回</el-button>
-      <el-button type="primary" :loading="btnLoading" @click="saveData">提 交</el-button>
+      <el-button style="margin-right:15px"
+                 @click="backIndex">返 回</el-button>
+      <el-button type="primary"
+                 :loading="btnLoading"
+                 @click="saveData">提 交</el-button>
     </div>
   </div>
 </template>
@@ -49,7 +58,7 @@ import request from "@/utils/request";
 import UploadList from "@/components/UploadList";
 var moment = require("moment");
 export default {
-  data() {
+  data () {
     return {
       value: "",
       list_location: null,
@@ -80,14 +89,14 @@ export default {
       list: null
     };
   },
-  created() {
+  created () {
     if (this.$route.query.id) {
       this.getDetail();
     }
     this.getTypeList();
   },
   methods: {
-    getTypeList() {
+    getTypeList () {
       this.listLoading = true;
       request({
         url: "/api/backend/incomeType/index",
@@ -105,7 +114,7 @@ export default {
         // this.listQuery.sale_status = ''
       });
     },
-    getDetail() {
+    getDetail () {
       // console.log(123);
 
       this.listLoading = true;
@@ -124,14 +133,15 @@ export default {
           console.log(err);
         });
     },
-    backIndex() {
-      this.$router.push({ path: "/financeMan/income" });
+    backIndex () {
+      // this.$router.replace({ path: "/income" });
+      this.$router.back(-1)
     },
-    saveData() {
+    saveData () {
       if (this.form.income_datetime) {
         this.form.income_datetime = moment(this.form.income_datetime).format("YYYY-MM-DD HH:mm:ss");
       }
-      if(!this.form.income_datetime || !this.form.desc || !this.form.price || !this.form.type_id) {
+      if (!this.form.income_datetime || !this.form.desc || !this.form.price || !this.form.type_id) {
         this.$message({
           type: "error",
           message: "请填写完整!"

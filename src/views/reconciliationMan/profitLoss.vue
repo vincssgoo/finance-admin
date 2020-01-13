@@ -1,6 +1,9 @@
 <template>
   <div class="app-container">
     <div style="margin-bottom:15px;">
+      <el-button style="float:left"
+                 type="primary"
+                 @click="dialogVisible = true">新建对账</el-button>
       <span style="margin-left:40px;">时间段</span>
       <el-date-picker style="margin-left:20px;width: 150px;"
                       type="date"
@@ -61,9 +64,15 @@
         </template>
       </el-table-column>
       <el-table-column align="center"
-                       label="时间">
+                       label="开始时间">
         <template slot-scope="scope">
-          {{ scope.row.start_date+'~'+scope.row.end_date }}
+          {{ scope.row.start_date}}
+        </template>
+      </el-table-column>
+      <el-table-column align="center"
+                       label="结束时间">
+        <template slot-scope="scope">
+          {{ scope.row.end_date }}
         </template>
       </el-table-column>
       <el-table-column align="center"
@@ -80,24 +89,6 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作"
-                       width="220"
-                       align="center">
-        <template slot-scope="scope"
-                  style="">
-          <div>
-
-            <div v-if="!scope.row.admin"
-                 style="color:red">
-              <el-button @click="handleEdit(scope.row)"
-                         type="primary">对账</el-button>
-            </div>
-            <div v-else></div>
-          </div>
-
-        </template>
-      </el-table-column>
-
     </el-table>
     <div class="block"
          style="margin-top:25px">
@@ -110,6 +101,36 @@
                      :total="total">
       </el-pagination>
     </div>
+    <el-dialog :visible.sync="dialogVisible"
+               :close-on-click-modal="false"
+               class="dialog">
+      <div class="first">
+        <span>上次结算至:{{last}}</span>
+        <div class="last"><span>本次结算日期从 {{now}} 至:</span></div>
+
+        <el-form ref="form"
+                 :model="form"
+                 label-position="left"
+                 label-width="70px">
+          <el-form-item label="日期"
+                        prop="name">
+            <el-date-picker v-model="form.end_date"
+                            type="date"
+                            placeholder="选择日期"
+                            value-format="yyyy-MM-dd">
+            </el-date-picker>
+          </el-form-item>
+        </el-form>
+
+      </div>
+      <div slot="footer"
+           class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary"
+                   @click="saveData"
+                   :loading="btnLoading">确定</el-button>
+      </div>
+    </el-dialog>
     <!-- <router-vie  w /> -->
   </div>
 </template>
@@ -129,14 +150,23 @@ export default {
         no: '',
         type_id: '',
       },
-      total:null,
+      dialogVisible: false,
+      total: null,
       btnLoading: false,
       listLoading: true,
       list: null,
+      time: null,
+      last: '',
+      now: '',
+      form: {
+        start_date: '',
+        end_date: '',
+      },
     }
   },
   created () {
     this.getList()
+    this.getTime()
   },
   methods: {
     handleSizeChange (val) {
@@ -188,6 +218,39 @@ export default {
       });
 
     },
+    getTime () {
+      this.listLoading = true;
+      request({
+        url: "/api/backend/moneySettle/date",
+        method: "get",
+      }).then(response => {
+        this.time = response.data;
+        this.last = this.time.last_end_date
+        this.now = this.time.now_start_date
+        this.listLoading = false;
+      });
+    },
+    saveData () {
+      this.form.start_date = this.time.now_start_date
+      this.btnLoading = true;
+      request({
+        url: "/api/backend/moneySettle/handle",
+        method: "post",
+        data: this.form
+      })
+        .then(() => {
+          this.$message({
+            type: "success",
+            message: "操作成功!"
+          });
+          this.dialogVisible = false;
+          this.getList()
+          this.getTime()
+        })
+        .finally(() => {
+          this.btnLoading = false;
+        });
+    }
 
   },
   components: {
@@ -195,3 +258,21 @@ export default {
   }
 }
 </script>
+<style>
+.first {
+  /* margin-top: 20px; */
+}
+.last {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+.dialog {
+  margin-left: 250px;
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0; */
+  width: 70%;
+}
+</style>
