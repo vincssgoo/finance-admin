@@ -116,7 +116,7 @@
                        label="项目总额"
                        width="110">
         <template slot-scope="scope">
-          {{ scope.row.total_price }}
+          <el-tag type="success">{{ scope.row.total_price }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column align="center"

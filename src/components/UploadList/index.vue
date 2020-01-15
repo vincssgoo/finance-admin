@@ -44,16 +44,19 @@
                :show-close="false"
                :close-on-click-modal="false">
       <img :src="previews"
-           class="avatar"
+           class="avatar1"
            v-if="videoType.indexOf(previews.substring(previews.lastIndexOf('.')+1)) == -1" />
       <video :src="previews"
-             class="avatar"
+             class="avatar1"
              v-else
              autoplay='true'
              controls="true"
              ref="videoPreview"></video>
-      <el-button @click="cancel"
-                 style="display:block;">返 回</el-button>
+      <div style="text-align:center">
+        <el-button @click="cancel"
+                   style="margin-top:30px;">返 回</el-button>
+      </div>
+
     </el-dialog>
   </div>
 </template>
@@ -218,6 +221,12 @@ export default {
     }
   }
 }
+.avatar1 {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
 .avatar-uploader .el-upload:hover {
   border-color: #409eff;
 }

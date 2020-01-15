@@ -1,30 +1,31 @@
 <template>
-  <div class="app-container" v-loading="listLoading">
+  <div class="app-container"
+       v-loading="listLoading">
     <div class="filter-container">时间段
-      <el-date-picker
-        v-model="detailQuery.start_datetime"
-        type="date"
-        value-format="yyyy-MM-dd"
-        style="width: 200px"
-      />至
-      <el-date-picker
-        v-model="detailQuery.end_datetime"
-        type="date"
-        value-format="yyyy-MM-dd"
-        style="width: 200px;margin-right:20px"
-      />
-      <el-button type="success" @click="searcher">搜索</el-button>
+      <el-date-picker v-model="detailQuery.start_datetime"
+                      type="date"
+                      value-format="yyyy-MM-dd"
+                      style="width: 200px" />至
+      <el-date-picker v-model="detailQuery.end_datetime"
+                      type="date"
+                      value-format="yyyy-MM-dd"
+                      style="width: 200px;margin-right:20px" />
+      <el-button type="success"
+                 @click="searcher">搜索</el-button>
       <div style="margin-top:20px;">
         <span style="margin-right:50px;">总收入：{{income_sum}}</span>
-        <span>总支出：{{pay_sum}}</span>
+        <span style="margin-right:50px;">总支出：{{pay_sum}}</span>
+        <span style="color:red">盈亏：{{profit}}</span>
       </div>
     </div>
     <!-- 折线图 -->
     <div class="chartBox">
-      <div id="myChart1" :style="{width: '', height: '500px'}"></div>
-      <div id="myChart2" ></div>
-      <div id="myChart3" :style="{width: '', height: '500px'}"></div>
-      <div id="myChart4" ></div>
+      <div id="myChart1"
+           :style="{width: '', height: '500px'}"></div>
+      <div id="myChart2"></div>
+      <div id="myChart3"
+           :style="{width: '', height: '500px'}"></div>
+      <div id="myChart4"></div>
     </div>
   </div>
 </template>
@@ -42,13 +43,14 @@ require("echarts/lib/component/title");
 require("echarts/lib/component/legend");
 
 export default {
-  data() {
+  data () {
     return {
       listLoading: false,
       listQuery: {
         starttime: "",
         endtime: ""
       },
+      profit: 0,
       detailQuery: {
         start_datetime: "",
         end_datetime: ""
@@ -56,10 +58,11 @@ export default {
       pay_sum: 0,
       income_sum: 0,
       lineData: [],
-      detail: {}
+      detail: {},
+
     };
   },
-  mounted() {
+  mounted () {
     this.month = new Date().getMonth() + 1;
     let MonthNextFirstDay = new Date(
       new Date().getFullYear(),
@@ -82,7 +85,7 @@ export default {
     this.getDetail();
   },
   methods: {
-    getDetail() {
+    getDetail () {
       this.detailQuery.start_datetime = this.detailQuery.start_datetime ? this.detailQuery.start_datetime + " 00:00:00" : ""
       this.detailQuery.end_datetime = this.detailQuery.end_datetime ? this.detailQuery.end_datetime + " 23:59:59" : ""
       this.listLoading = true
@@ -94,6 +97,9 @@ export default {
         this.income_sum = res.data.income_sum;
         this.pay_sum = res.data.pay_sum;
         this.lineData[0] = res.data.to_day_income_list;
+        this.income_sum = this.income_sum.replace(/,/g, "")
+        this.pay_sum = this.pay_sum.replace(/,/g, "")
+        this.profit = this.income_sum - this.pay_sum
         this.drawLine(
           this.detailQuery.start_datetime,
           this.detailQuery.end_datetime,
@@ -115,9 +121,9 @@ export default {
         console.log(this.lineData[5])
         this.myChart2.setOption({
           title: {
-            text:'收入详情',
+            text: '收入详情',
             left: 'center',
-            top:50
+            top: 50
           },
           tooltip: {
             trigger: 'item',
@@ -134,7 +140,7 @@ export default {
               type: 'pie',
               radius: '55%',
               center: ['50%', '60%'],
-              data:this.lineData[1].sort(function (a, b) { return a.value - b.value; }),
+              data: this.lineData[1].sort(function (a, b) { return a.value - b.value; }),
               emphasis: {
                 itemStyle: {
                   shadowBlur: 10,
@@ -146,48 +152,48 @@ export default {
           ]
         })
         this.myChart4.setOption({
-            title: {
-              text:'支出详情',
-              left: 'center',
-            top:50
-            },
-            tooltip: {
-              trigger: 'item',
-              formatter: '{a} <br/>{b} : {c} ({d}%)'
-            },
-            legend: {
-              orient: 'vertical',
-              left: 'left',
-              data: this.lineData[5]
-            },
-            series: [
-              {
-                name: '支出来源',
-                type: 'pie',
-                radius: '55%',
-                center: ['50%', '60%'],
-                data:this.lineData[3],
-                emphasis: {
-                  itemStyle: {
+          title: {
+            text: '支出详情',
+            left: 'center',
+            top: 50
+          },
+          tooltip: {
+            trigger: 'item',
+            formatter: '{a} <br/>{b} : {c} ({d}%)'
+          },
+          legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: this.lineData[5]
+          },
+          series: [
+            {
+              name: '支出来源',
+              type: 'pie',
+              radius: '55%',
+              center: ['50%', '60%'],
+              data: this.lineData[3],
+              emphasis: {
+                itemStyle: {
                   shadowBlur: 10,
                   shadowOffsetX: 0,
                   shadowColor: 'rgba(0, 0, 0, 0.5)'
                 }
-                }
               }
-            ]
-          })
-        });
-        this.listLoading = false;
+            }
+          ]
+        })
+      });
+      this.listLoading = false;
     },
-    searcher() {
+    searcher () {
       if (!this.detailQuery.start_datetime || !this.detailQuery.end_datetime) {
         this.$message.warning("请选择开始和结束日期");
         return;
       }
       this.getDetail();
     },
-    getText(value) {
+    getText (value) {
       if (value == "myChart1") {
         return "收入";
       } else if (value == "myChart2") {
@@ -198,7 +204,7 @@ export default {
         return "支出详情";
       }
     },
-    getName(value) {
+    getName (value) {
       if (value == "myChart1") {
         return "收入";
       } else if (value == "myChart2") {
@@ -209,7 +215,7 @@ export default {
         // return "用户预订场地数量";
       }
     },
-    getlineData(value) {
+    getlineData (value) {
       if (value == "myChart1") {
         return this.lineData[0];
       } else if (value == "myChart2") {
@@ -220,7 +226,7 @@ export default {
         return this.lineData[3];
       }
     },
-    drawLine(startdate, enddate, my_Chart) {
+    drawLine (startdate, enddate, my_Chart) {
       // 基于准备好的dom，初始化echarts实例
       let starttime = startdate;
       let endtime = enddate;
@@ -266,7 +272,7 @@ export default {
         ]
       });
     },
-    initChartsTwo() {
+    initChartsTwo () {
       // 基于准备好的dom，初始化echarts实例
       let starttime = this.detailQuery.start_datetime;
       let endtime = this.detailQuery.end_datetime;
@@ -288,12 +294,12 @@ export default {
             radius: '55%',
             center: ['50%', '60%'],
             // data: this.getlineData(myChart2),
-            data:[
-                {value: 335, name: '直接访问'},
-                {value: 310, name: '邮件营销'},
-                {value: 274, name: '联盟广告'},
-                {value: 235, name: '视频广告'},
-                {value: 400, name: '搜索引擎'}
+            data: [
+              { value: 335, name: '直接访问' },
+              { value: 310, name: '邮件营销' },
+              { value: 274, name: '联盟广告' },
+              { value: 235, name: '视频广告' },
+              { value: 400, name: '搜索引擎' }
             ],
             emphasis: {
               itemStyle: {
@@ -385,13 +391,13 @@ export default {
     //     ]
     //   });
     // },
-    get(day1, day2) {
+    get (day1, day2) {
       let end_day =
         day2.split(" ")[0].split("-")[1] +
         "/" +
         day2.split(" ")[0].split("-")[2];
       //  console.log(end_day)
-      var getDate = function(str) {
+      var getDate = function (str) {
         var tempDate = new Date();
         var list = str.split("-");
         tempDate.setFullYear(list[0]);

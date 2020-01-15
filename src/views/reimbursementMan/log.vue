@@ -73,7 +73,7 @@
                     v-if="item.data_before.pay_datetime || item.data_before.income_datetime">变更后：</span>
               <span class="span_width"
                     style="margin-left:20px;color:red;"
-                    v-if="item.data_before.pay_datetime || item.data_before.income_datetime">{{item.data_before.pay_datetime || item.data_before.income_datetime}}</span>
+                    v-if="item.data_before.pay_datetime || item.data_before.income_datetime">{{item.data_after.pay_datetime || item.data_after.income_datetime}}</span>
             </div>
             <div class="income_handle"
                  v-if="item.data_before.type">

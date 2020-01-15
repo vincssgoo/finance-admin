@@ -86,7 +86,9 @@
       <el-table-column align="center"
                        label="金额"
                        width="90">
-        <template slot-scope="scope">{{ scope.row.price }}</template>
+        <template slot-scope="scope">
+          <el-tag type="success">{{ scope.row.price }}</el-tag>
+        </template>
       </el-table-column>
       <el-table-column align="center"
                        label="备注"
