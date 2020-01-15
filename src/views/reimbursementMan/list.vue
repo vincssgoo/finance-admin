@@ -20,7 +20,7 @@
                  icon="el-icon-search"
                  @click="handleFilter(value)">搜索</el-button>
       <el-select v-model="value"
-                 placeholder="是否处理"
+                 placeholder="状态"
                  style="width:120px;margin-right:20px;float:right"
                  clearable>
         <el-option v-for="item in options"
@@ -86,7 +86,7 @@
       </el-table-column>
       <el-table-column align="center"
                        label="备注"
-                       width="85">
+                       width="125">
         <template slot-scope="scope">
           {{ scope.row.content }}
         </template>
@@ -111,6 +111,10 @@
                style="color:red">
             未处理
           </div>
+          <div v-else-if="scope.row.handle_status == '3'"
+               style="color:#67c23a">
+            已取消
+          </div>
         </template>
       </el-table-column>
       <el-table-column align="center"
@@ -131,7 +135,7 @@
         </template>
       </el-table-column>
       <el-table-column label="操作"
-                       width="150"
+                       width="220"
                        align="center">
         <template slot-scope="scope"
                   style="">
@@ -144,7 +148,13 @@
             <div v-else-if="scope.row.handle_status == '2'"
                  style="color:red">
               <el-button type="danger"
+                         @click="cancel(scope.row)">取消</el-button>
+              <el-button type="success"
                          @click="goHandle(scope.row)">处理</el-button>
+
+            </div>
+            <div v-else-if="scope.row.handle_status == '3'"
+                 style="color:red">
             </div>
           </div>
 
@@ -191,6 +201,10 @@ export default {
           value: '选项2',
           label: '已处理',
         },
+        {
+          value: '选项3',
+          label: '已取消',
+        },
       ],
       value: '',
       list_location: null,
@@ -215,6 +229,39 @@ export default {
     this.getList();
   },
   methods: {
+    cancel (row) {
+
+
+      this.$confirm('此操作将取消该申请, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        row.handle_status = '3'
+        this.btnLoading = true;
+        request({
+          url: "/api/backend/expense/cancel",
+          method: "post",
+          data: { id: row.id }
+        })
+          .then(() => {
+            // this.getTypeList();
+            this.$message({
+              type: "success",
+              message: "操作成功!"
+            });
+          })
+          .finally(() => {
+            this.btnLoading = false;
+          });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消'
+        });
+      });
+
+    },
     goDetail (row) {
       this.$router.push({
         path: '/reimbursementMan/detail',
@@ -252,6 +299,9 @@ export default {
       }
       else if (value == '选项2') {
         this.listQuery.status = '1'
+      }
+      else if (value == '选项3') {
+        this.listQuery.status = '3'
       }
       // console.log(this.listQuery.sale_status)
       this.listQuery.page = 1;

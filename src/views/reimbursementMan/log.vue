@@ -30,6 +30,7 @@
           <span v-if="item.type == 1">新增</span>
           <span v-if="item.type == 2">修改</span>
           <span v-if="item.type == 3">处理</span>
+          <span v-if="item.type == 4">取消</span>
         </div>
         <div class="content_mid">
           <span v-if="item.group == 1">收入编号:{{item.no}}</span>
@@ -108,6 +109,17 @@
                     style="margin-left:20px;color:red;"
                     v-if="item.data_after.content">{{item.data_after.content}}</span>
             </div>
+            <!-- <div class="income_handle"
+                 v-if="(item.data_before.content == '' || item.data_before.content) && item.data_after.content">
+              <span>{{item.group == 1 ? '收入' : item.group == 2 ? '支出' : '报销'}}备注：</span>
+              <span class="span_width"
+                    style="margin-left:20px;">{{item.data_before.content ? item.data_before.content : ''}}</span>
+              <span style="margin-left:30px;color:red;"
+                    v-if="item.data_after.content">变更后：</span>
+              <span class="span_width"
+                    style="margin-left:20px;color:red;"
+                    v-if="item.data_after.content">{{item.data_after.content}}</span>
+            </div> -->
             <div class="income_handle"
                  v-if="item.data_before.proof || item.data_before.pay_proof || item.data_before.expense_proof">
               <span style="color:red;margin-right:50px;"
@@ -212,6 +224,8 @@ export default {
         this.total = response.data.total
         this.list = response.data.data;
         this.listLoading = false;
+        console.log(this.list);
+
       });
     },
     seacher () {
