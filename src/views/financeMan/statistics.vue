@@ -86,8 +86,14 @@ export default {
   },
   methods: {
     getDetail () {
+      // this.detailQuery.start_datetime = null
+      // this.detailQuery.end_datetime = null
+      this.detailQuery.start_datetime = this.detailQuery.start_datetime.replace(/00:00:00/, '')
+      this.detailQuery.end_datetime = this.detailQuery.end_datetime.replace(/23:59:59/, '')
       this.detailQuery.start_datetime = this.detailQuery.start_datetime ? this.detailQuery.start_datetime + " 00:00:00" : ""
       this.detailQuery.end_datetime = this.detailQuery.end_datetime ? this.detailQuery.end_datetime + " 23:59:59" : ""
+      console.log(this.detailQuery.start_datetime);
+
       this.listLoading = true
       request({
         url: "/api/backend/finance/index",
