@@ -58,7 +58,7 @@
       </el-table-column>
       <el-table-column align="center"
                        label="支出时间"
-                       width="160">
+                       width="100">
         <template slot-scope="scope">
           {{ scope.row.pay_datetime }}
         </template>
@@ -85,8 +85,7 @@
         </template>
       </el-table-column>
       <el-table-column align="center"
-                       label="备注"
-                       width="125">
+                       label="备注">
         <template slot-scope="scope">
           {{ scope.row.content }}
         </template>
@@ -94,7 +93,7 @@
 
       <el-table-column align="center"
                        label="提交时间"
-                       width="165">
+                       width="100">
         <template slot-scope="scope">
           {{ scope.row.created_at }}
         </template>
@@ -129,7 +128,7 @@
       </el-table-column>
       <el-table-column align="center"
                        label="最新修改时间"
-                       width="165">
+                       width="100">
         <template slot-scope="scope">
           {{ scope.row.updated_at }}
         </template>
@@ -303,6 +302,9 @@ export default {
       else if (value == '选项3') {
         this.listQuery.status = '3'
       }
+      else {
+        this.listQuery.status = ''
+      }
       // console.log(this.listQuery.sale_status)
       this.listQuery.page = 1;
       this.getList();
@@ -310,6 +312,8 @@ export default {
     },
     getList () {
       this.listLoading = true;
+      console.log(this.listQuery);
+
       request({
         url: "/api/backend/expense/index",
         method: "get",

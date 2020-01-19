@@ -7,6 +7,9 @@
       <el-form-item label="报销凭证">
         <UploadList :list="proofList">
         </UploadList>
+        <img :src="urlCode"
+             v-if="urlCode"
+             style="width: 118px;height: 118px">
         <!-- <UploadList></UploadList> -->
       </el-form-item>
     </el-form>
@@ -35,9 +38,12 @@ export default {
       bxList: [],
       form: {
         id: '',
-        pay_proof: [],
+        expense_proof: [],
       },
       list: null,
+      urlCode: '',
+      userId: null,
+      id: null,
     }
   },
   created () {
@@ -45,7 +51,10 @@ export default {
     if (this.proofList == null) {
       this.proofList = []
     }
+    this.id = this.$route.query.id
+    this.getId()
   },
+
   methods: {
 
     backIndex () {
@@ -66,6 +75,31 @@ export default {
       }).catch(err => {
         console.log(err);
       });
+    },
+    getId () {
+      request({
+        url: "/api/backend/admin/info",
+        method: "get",
+      }).then(response => {
+        this.userId = response.data.user.id
+        console.log(this.userId);
+        this.openCode()
+      }).catch(err => {
+        console.log(err);
+      });
+    },
+    openCode () {
+      console.log(this.userId);
+
+      request({
+        url: "/api/backend/qrCode/index",
+        method: "get",
+        params: {
+          url: 'http://finance-h5.mvp45.com/proofBx?id=' + this.id + '&user_id=' + this.userId
+        }
+      }).then((res) => {
+        this.urlCode = res.data
+      })
     },
     saveData () {
       this.btnLoading = true;

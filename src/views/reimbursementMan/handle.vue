@@ -54,6 +54,9 @@
       <el-form-item label="报销凭证">
         <UploadList :list="bxList">
         </UploadList>
+        <img :src="urlCode"
+             v-if="urlCode"
+             style="width: 118px;height: 118px">
       </el-form-item>
 
     </el-form>
@@ -96,6 +99,9 @@ export default {
       listLoading: true,
       list: null,
       typeList: null,
+      urlCode: '',
+      userId: null,
+      id: null,
     }
   },
   created () {
@@ -117,14 +123,41 @@ export default {
       this.bxList = []
       this.proofList = []
     }
-
+    this.id = this.$route.query.id
+    this.getId()
 
 
     // console.log(this.proofList);
 
     // this.getSchoolList();
   },
+
   methods: {
+    openCode () {
+      console.log(this.userId);
+
+      request({
+        url: "/api/backend/qrCode/index",
+        method: "get",
+        params: {
+          url: 'http://finance-h5.mvp45.com/proofBx?id=' + this.id + '&user_id=' + this.userId
+        }
+      }).then((res) => {
+        this.urlCode = res.data
+      })
+    },
+    getId () {
+      request({
+        url: "/api/backend/admin/info",
+        method: "get",
+      }).then(response => {
+        this.userId = response.data.user.id
+        console.log(this.userId);
+        this.openCode()
+      }).catch(err => {
+        console.log(err);
+      });
+    },
     getTypeList () {
       this.listLoading = true;
       request({

@@ -321,6 +321,8 @@ export default {
       }
       else if (value == '选项3') {
         this.listQuery.status = '3'
+      } else {
+        this.listQuery.status = ''
       }
       // console.log(this.listQuery.sale_status)
       this.listQuery.page = 1;

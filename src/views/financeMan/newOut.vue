@@ -90,7 +90,6 @@ export default {
         content: '',
         create_user: '',
         pay_proof: [],
-        expense_proof: [],
       },
       btnLoading: false,
       listLoading: true,
@@ -132,7 +131,21 @@ export default {
         params: { id: this.$route.query.id }
       }).then(response => {
         // this.list = response.data.data;
-        this.form = response.data
+        // console.log(response);
+
+        this.form = {
+          id: response.data.id,
+          desc: response.data.desc,
+          pay_datetime: response.data.pay_datetime,
+          price: response.data.price,
+          type_id: response.data.type_id,
+          content: response.data.content,
+          create_user: response.data.create_user,
+          pay_proof: response.data.pay_proof,
+        }
+        if (!this.form.create_user) {
+          this.form.create_user = response.data.applicant
+        }
       }).catch(err => {
         console.log(err);
 
@@ -143,6 +156,9 @@ export default {
       this.$router.back(-1)
     },
     saveData () {
+      if (!this.form.create_user) {
+        this.form.create_user = this.form.applicant
+      }
       if (this.form.pay_datetime) {
         this.form.pay_datetime = moment(this.form.pay_datetime).format('YYYY-MM-DD HH:mm:ss')
       }
@@ -153,8 +169,13 @@ export default {
         });
         return
       }
-      this.form.expense_proof = []
+      // if (this.form.expense_proof == []) {
+      //   this.form.expense_proof = []
+      // }
+
       this.btnLoading = true;
+      console.log(this.form);
+
       request({
         url: "/api/backend/pay/store",
         method: "post",

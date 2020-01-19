@@ -40,9 +40,23 @@
                      :key="item.id">
           </el-option>
         </el-select>
-
-        <el-input placeholder="收入说明"
+        <el-select v-model="value"
+                   placeholder="是否已上传凭证"
+                   style="width:160px;margin-right:20px;"
+                   clearable>
+          <el-option v-for="item in options"
+                     :key="item.value"
+                     :label="item.label"
+                     :value="item.value">
+          </el-option>
+        </el-select>
+        <el-input placeholder="支出说明"
                   v-model="listQuery.keyword"
+                  style="width: 150px;margin-right:20px"
+                  clearable>
+        </el-input>
+        <el-input placeholder="经手人"
+                  v-model="listQuery.create_user"
                   style="width: 150px;margin-right:20px"
                   clearable>
         </el-input>
@@ -89,7 +103,7 @@
       </el-table-column>
       <el-table-column align="center"
                        label="支出时间"
-                       width="160">
+                       width="100">
         <template slot-scope="scope">
           {{ scope.row.pay_datetime }}
         </template>
@@ -116,15 +130,14 @@
         </template>
       </el-table-column>
       <el-table-column align="center"
-                       label="备注"
-                       width="85">
+                       label="备注">
         <template slot-scope="scope">
           {{ scope.row.content }}
         </template>
       </el-table-column>
       <el-table-column align="center"
-                       label="是否已上传支出凭证"
-                       width="165">
+                       label="支出凭证"
+                       width="95">
         <template slot-scope="scope">
           <div v-if="scope.row.pay_proof.length>0">
             已上传
@@ -136,8 +149,8 @@
         </template>
       </el-table-column>
       <el-table-column align="center"
-                       label="是否已上传报销凭证"
-                       width="165">
+                       label="报销凭证"
+                       width="95">
         <template slot-scope="scope">
           <div v-if="scope.row.expense_proof.length > 0&&scope.row.is_expense == 1">
             已上传
@@ -154,7 +167,7 @@
       </el-table-column>
       <el-table-column align="center"
                        label="录入时间"
-                       width="165">
+                       width="100">
         <template slot-scope="scope">
           {{ scope.row.created_at }}
         </template>
@@ -178,7 +191,7 @@
       </el-table-column>
       <el-table-column align="center"
                        label="最新修改时间"
-                       width="165">
+                       width="100">
         <template slot-scope="scope">
           {{ scope.row.updated_at }}
         </template>
@@ -255,6 +268,8 @@ export default {
         pay_start_datetime: '',
         no: '',
         type_id: '',
+        proof_status: '',
+        create_user: '',
       },
       pay_sum: null,
       btnLoading: false,
@@ -264,6 +279,17 @@ export default {
       value: '',
       total: null,
       type: [],
+      options: [
+        {
+          value: '选项1',
+          label: '未上传',
+        },
+        {
+          value: '选项2',
+          label: '已上传',
+        },
+      ],
+
     }
   },
   created () {
@@ -280,6 +306,7 @@ export default {
     goBxProof (row) {
       this.$router.push({ path: '/financeMan/bxproof', query: { id: row.id } })
 
+
     },
     handleSizeChange (val) {
       this.listQuery.limit = val;
@@ -289,6 +316,17 @@ export default {
       this.listQuery.page = val;
       this.getList();
     },
+    //  openCode (row) {
+    //   request({
+    //     url: "/api/backend/qrCode/index",
+    //     method: "get",
+    //     data: {
+    //       url: 'http://finance-h5.mvp45.com/proof?id=' + row.id + '&user_id=' + this.userId
+    //     }
+    //   }).then((res) => {
+    //     console.log(res)
+    //   })
+    // },
     handleFilter (value) {
       // console.log(value);
 
@@ -299,6 +337,12 @@ export default {
       //   this.listQuery.sale_status = '2'
       // }
       // console.log(this.listQuery.sale_status)
+      if (value == '选项1') {
+        this.listQuery.proof_status = '2'
+      }
+      else if (value == '选项2') {
+        this.listQuery.proof_status = '1'
+      }
       this.listQuery.page = 1;
       this.getList();
       // this.listQuery.sale_status = ''
@@ -325,7 +369,8 @@ export default {
         this.pay_sum = response.data.pay_sum
         this.total = response.data.total;
         this.listLoading = false;
-        this.value = ""
+        console.log(this.list);
+
         // console.log(this.value);
         // console.log(this.list);
 

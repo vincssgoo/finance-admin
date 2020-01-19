@@ -75,7 +75,7 @@
       </el-table-column>
       <el-table-column align="center"
                        label="收入时间"
-                       width="160">
+                       width="100">
         <template slot-scope="scope">{{ scope.row.income_datetime }}</template>
       </el-table-column>
       <el-table-column align="center"
@@ -91,12 +91,11 @@
         </template>
       </el-table-column>
       <el-table-column align="center"
-                       label="备注"
-                       width="125">
+                       label="备注">
         <template slot-scope="scope">{{ scope.row.content }}</template>
       </el-table-column>
       <el-table-column align="center"
-                       label="是否已上传凭证"
+                       label="凭证"
                        width="95">
         <template slot-scope="scope">
           <div v-if="scope.row.proof.length!=0">已上传</div>
@@ -106,7 +105,7 @@
       </el-table-column>
       <el-table-column align="center"
                        label="录入时间"
-                       width="165">
+                       width="100">
         <template slot-scope="scope">{{ scope.row.created_at }}</template>
       </el-table-column>
       <el-table-column align="center"
@@ -127,7 +126,7 @@
       </el-table-column>
       <el-table-column align="center"
                        label="最新修改时间"
-                       width="165">
+                       width="100">
         <template slot-scope="scope">{{ scope.row.updated_at }}</template>
       </el-table-column>
       <el-table-column label="操作"

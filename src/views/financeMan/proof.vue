@@ -8,6 +8,9 @@
         <UploadList :list="proofList"
                     v-model="proofList">
         </UploadList>
+        <img :src="urlCode"
+             v-if="urlCode"
+             style="width: 118px;height: 118px">
         <!-- <UploadList></UploadList> -->
       </el-form-item>
 
@@ -19,6 +22,9 @@
                  :loading="btnLoading"
                  @click="saveData">提 交</el-button>
     </div>
+    <!-- <div style="text-align:center">
+      <span style="margin-top:35px;font-size:14px;display:inline-block;">tip:手机上传凭证后请先刷新后再提交!</span>
+    </div> -->
   </div>
 </template>
 
@@ -39,19 +45,51 @@ export default {
         proof: [],
       },
       list: null,
+      urlCode: '',
+      userId: null,
+      id: null,
     }
   },
-  created () {
+  async created () {
     this.getList()
     if (this.proofList == null) {
       this.proofList = []
     }
+    this.id = this.$route.query.id
+    await this.getId()
   },
+
   methods: {
 
     backIndex () {
       // this.$router.push({ path: '/income' })
       this.$router.back(-1)
+    },
+    getId () {
+      request({
+        url: "/api/backend/admin/info",
+        method: "get",
+      }).then(response => {
+        this.userId = response.data.user.id
+        this.openCode()
+        console.log(this.userId);
+      }).catch(err => {
+        console.log(err);
+      });
+    },
+
+    openCode () {
+      console.log(this.userId);
+
+      request({
+        url: "/api/backend/qrCode/index",
+        method: "get",
+        params: {
+          url: 'http://finance-h5.mvp45.com/proof?id=' + this.id + '&user_id=' + this.userId
+        }
+      }).then((res) => {
+        this.urlCode = res.data
+      })
     },
     getList () {
       this.listLoading = true;
@@ -60,7 +98,8 @@ export default {
         method: "get",
         params: { id: this.$route.query.id }
       }).then(response => {
-        console.log(response);
+        this.list = response.data
+        // console.log(response);
         this.proofList = response.data
       }).catch(err => {
         console.log(err);
