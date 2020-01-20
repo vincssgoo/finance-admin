@@ -31,7 +31,9 @@
 <script>
 import request from "@/utils/request";
 import UploadList from '@/components/UploadList'
-
+import {
+  BASE_URL
+} from '../../../config/prod.env.js';
 // import UploadList from '@/components/UploadList'
 
 export default {
@@ -48,6 +50,7 @@ export default {
       urlCode: '',
       userId: null,
       id: null,
+      url: null,
     }
   },
   async created () {
@@ -57,6 +60,11 @@ export default {
     }
     this.id = this.$route.query.id
     await this.getId()
+    this.url = BASE_URL
+    // this.url = this.url.replace("\"", "")
+    this.url = this.url.substring(1, this.url.length - 1);
+    console.log(this.url);
+
   },
 
   methods: {
@@ -85,7 +93,7 @@ export default {
         url: "/api/backend/qrCode/index",
         method: "get",
         params: {
-          url: 'http://finance-h5.mvp45.com/proof?id=' + this.id + '&user_id=' + this.userId
+          url: this.url + 'proof?id=' + this.id + '&user_id=' + this.userId
         }
       }).then((res) => {
         this.urlCode = res.data
